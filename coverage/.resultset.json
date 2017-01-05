@@ -4,7 +4,7 @@
       "/Users/wonderland/Turing/1module/Projects/Head_Count/lib/district.rb": [
         1,
         1,
-        4,
+        0,
         null,
         null,
         1,
@@ -15,14 +15,51 @@
       "/Users/wonderland/Turing/1module/Projects/Head_Count/lib/district_repository.rb": [
         1,
         1,
-        0,
+        null,
+        null,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1991,
+        null,
+        null,
+        null,
+        1,
+        1,
+        1,
+        1991,
+        11,
+        null,
+        null,
+        1,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
         null,
         null
       ],
       "/Users/wonderland/Turing/1module/Projects/Head_Count/lib/enrollment.rb": [
         1,
         1,
+        null,
+        null,
+        null,
+        1,
         0,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
         null,
         null
       ],
@@ -34,7 +71,7 @@
         null
       ]
     },
-    "timestamp": 1483495395
+    "timestamp": 1483574212
   },
   "RSpec": {
     "coverage": {
