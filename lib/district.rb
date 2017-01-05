@@ -5,10 +5,4 @@ class District
     #binding.pry
     @name =  name[:name]
   end
-
-  # def name
-  #   @input.values.pop.upcase
-  # end
-
-
 end
