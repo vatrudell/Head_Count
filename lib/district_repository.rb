@@ -1,27 +1,27 @@
 require 'csv'
 require 'pry'
 require './lib/district'
+require './lib/enrollment_repository'
+
 
 
 class DistrictRepository
-  def initialize
+  def initialize   #(enrollment_repository)
     @districts = {}
+    @enrollment_instance = EnrollmentRepository.new  #enrollment_repository
   end
 
   def load_data(input)
     file = input[:enrollment][:kindergarten]  #thats probably hardcoded in there
     data = CSV.open(file, headers: true, header_converters: :symbol)
+    @enrollment_instance.load_data(input)
     data.each do |line|
-      @districts[line[:location]] = District.new({name: line[:location]})
+      @districts[line[:location]] = District.new({name: line[:location]}, self)
     end
   end
 
   def find_by_name(district_name)
-    @districts.find do |district|
-      if district[0] == district_name
-        district
-      end
-    end
+    @districts[district_name]
   end
 
   def find_all_matching(input)
@@ -30,13 +30,29 @@ class DistrictRepository
     end
     matches
   end
+
+  def enrollment(name)
+    @enrollment_instance.find_by_name(name)
+
+  end
+  #binding.pry
 end
 
-derp = DistrictRepository.new
-derp.load_data({
+
+new = DistrictRepository.new
+new.load_data({
   :enrollment => {
     :kindergarten => "./data/Kindergartners in full-day program.csv"
   }
 })
-derp.find_by_name("ACADEMY 20")
-puts derp.find_all_matching("WE").count
+kek = new.find_by_name("ACADEMY 20")
+#binding.pry
+# puts @enrollment_repository.find_all_matching("WE").count
+puts kek.enrollment.kindergarten_participation_in_year(2010)
+
+# er = EnrollmentRepository.new
+# er.load_data({
+#   :enrollment => {
+#     :kindergarten => "./data/Kindergartners in full-day program.csv"
+#   }
+# })
