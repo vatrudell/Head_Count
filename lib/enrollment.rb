@@ -1,11 +1,12 @@
 require 'pry'
 
 class Enrollment
-  attr_reader :name,
+  attr_accessor :name,
               :kindergarten_participation
 
   def initialize(input)
     @name = input[:name]
+    #binding.pry
     @kindergarten_participation = input[:kindergarten_participation]
   end
 
@@ -19,7 +20,8 @@ class Enrollment
   ## revisit "truncate" method or class?
 
   def kindergarten_participation_in_year(year)
-    p @kindergarten_participation[year].to_s[0..4].to_f
+    @kindergarten_participation[year.to_s].to_s[0..4].to_f
+    #binding.pry
   end
 end
 
