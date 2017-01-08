@@ -6,18 +6,31 @@ require './lib/enrollment_repository'
 
 
 class DistrictRepository
-  def initialize   #(enrollment_repository)
+  def initialize
     @districts = {}
-    @enrollment_instance = EnrollmentRepository.new  #enrollment_repository
+    @enrollment_instance = EnrollmentRepository.new
   end
 
   def load_data(input)
     file = input[:enrollment][:kindergarten]  #thats probably hardcoded in there
-    data = CSV.open(file, headers: true, header_converters: :symbol)
+    @file = CSV.open(file, headers: true, header_converters: :symbol)
     @enrollment_instance.load_data(input)
-    data.each do |line|
-      @districts[line[:location]] = District.new({name: line[:location]}, self)
+    # data.each do |line|
+    #   @districts[line[:location]] = District.new({name: line[:location], data: line[:data]}, self)
+    #
+    # end
+    populate_data
+  end
+
+  def populate_data
+    @file.each do |line|
+      if @districts[line[:location]]
+        @districts[line[:location]].enrollment_data[line[:timeframe]] = line[:data]
+      else
+        @districts[line[:location]] = District.new({name: line[:location], enrollment_data: {line[:timeframe] => line[:data]}}, self)
+      end
     end
+    binding.pry
   end
 
   def find_by_name(district_name)
@@ -31,28 +44,16 @@ class DistrictRepository
     matches
   end
 
-  def enrollment(name)
+  def find_enrollment(name)
     @enrollment_instance.find_by_name(name)
-
   end
-  #binding.pry
 end
 
 
-new = DistrictRepository.new
-new.load_data({
-  :enrollment => {
-    :kindergarten => "./data/Kindergartners in full-day program.csv"
-  }
-})
-kek = new.find_by_name("ACADEMY 20")
-#binding.pry
-# puts @enrollment_repository.find_all_matching("WE").count
-puts kek.enrollment.kindergarten_participation_in_year(2010)
-
-# er = EnrollmentRepository.new
-# er.load_data({
-#   :enrollment => {
-#     :kindergarten => "./data/Kindergartners in full-day program.csv"
-#   }
-# })
+dr = DistrictRepository.new
+dr.load_data({
+               :enrollment => {
+                 :kindergarten => "./data/Kindergartners in full-day program.csv"
+               }
+             })
+puts dr.find_by_name("ACADEMY 20")
