@@ -3,7 +3,7 @@ class District
               :dr,
               :enrollment_data
   def initialize(district, dr = nil)
-    @district = district
+    # @district = district
     @name =  district[:name]
     @dr = dr
     @enrollment_data = district[:enrollment_data]
@@ -12,4 +12,6 @@ class District
   def enrollment
     @dr.find_enrollment(@name)
   end
+
+    
 end

@@ -5,7 +5,12 @@ require './lib/enrollment_repository'
 
 
 
+
 class DistrictRepository
+  attr_reader :districts,
+              :enrollment_instance,
+              :file
+
   def initialize
     @districts = {}
     @enrollment_instance = EnrollmentRepository.new
@@ -15,22 +20,19 @@ class DistrictRepository
     file = input[:enrollment][:kindergarten]  #thats probably hardcoded in there
     @file = CSV.open(file, headers: true, header_converters: :symbol)
     @enrollment_instance.load_data(input)
-    # data.each do |line|
-    #   @districts[line[:location]] = District.new({name: line[:location], data: line[:data]}, self)
-    #
-    # end
     populate_data
   end
+
 
   def populate_data
     @file.each do |line|
       if @districts[line[:location]]
-        @districts[line[:location]].enrollment_data[line[:timeframe]] = line[:data]
+        @districts[line[:location]].enrollment_data[line[:timeframe].to_i] = line[:data][0..4].to_f
       else
-        @districts[line[:location]] = District.new({name: line[:location], enrollment_data: {line[:timeframe] => line[:data]}}, self)
+        @districts[line[:location]] = District.new({name: line[:location], enrollment_data: {line[:timeframe].to_i => line[:data][0..4].to_f}}, self)
+
       end
     end
-    binding.pry
   end
 
   def find_by_name(district_name)
