@@ -3,6 +3,7 @@ require './lib/enrollment'
 require 'pry'
 
 class EnrollmentRepository
+  attr_accessor :enrollments
   def initialize
     @enrollments = {}
   end
@@ -16,13 +17,13 @@ class EnrollmentRepository
   def populate_data
     @data.each do |line|
       if @enrollments[line[:location]]
-        @enrollments[line[:location]].kindergarten_participation[line[:timeframe]] = line[:data]
+        @enrollments[line[:location]].kindergarten_participation[line[:timeframe].to_i] = line[:data][0..4].to_f
       else
-        @enrollments[line[:location]] = Enrollment.new({name: line[:location], kindergarten_participation: {line[:timeframe] => line[:data]}})
+        @enrollments[line[:location]] = Enrollment.new({name: line[:location], kindergarten_participation: {line[:timeframe].to_i => line[:data][0..4].to_f}})
 
       end
     end
-    binding.pry
+    #binding.pry
   end
 
   def find_by_name(district_name)
