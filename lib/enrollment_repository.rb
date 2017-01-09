@@ -16,11 +16,10 @@ class EnrollmentRepository
 
   def populate_data
     @data.each do |line|
-      if @enrollments[line[:location]]
-        @enrollments[line[:location]].kindergarten_participation[line[:timeframe].to_i] = line[:data][0..4].to_f
+      if @enrollments[line[:location].upcase]
+        @enrollments[line[:location].upcase].kindergarten_participation[line[:timeframe].to_i] = line[:data][0..4].to_f
       else
-        @enrollments[line[:location]] = Enrollment.new({name: line[:location], kindergarten_participation: {line[:timeframe].to_i => line[:data][0..4].to_f}})
-
+        @enrollments[line[:location].upcase] = Enrollment.new({name: line[:location].upcase, kindergarten_participation: {line[:timeframe].to_i => line[:data][0..4].to_f}})
       end
     end
     #binding.pry
@@ -38,7 +37,7 @@ end
 #            :kindergarten => "./data/Kindergartners in full-day program.csv"
 #          }
 #        })
-# puts er.find_by_name("ACADEMY 20")
+# er.find_by_name("COLORADO")
 
 #
 #
