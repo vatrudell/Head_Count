@@ -26,11 +26,11 @@ class DistrictRepository
 
   def populate_data
     @file.each do |line|
-      if @districts[line[:location]]
-        @districts[line[:location]].enrollment_data[line[:timeframe].to_i] = line[:data][0..4].to_f
+      if @districts[line[:location].upcase]
+        @districts[line[:location].upcase].enrollment_data[line[:timeframe].to_i] = line[:data][0..4].to_f
       else
-        @districts[line[:location]] = District.new({name: line[:location], enrollment_data: {line[:timeframe].to_i => line[:data][0..4].to_f}}, self)
-
+        @districts[line[:location].upcase] = District.new({name: line[:location].upcase, enrollment_data: {line[:timeframe].to_i => line[:data][0..4].to_f}}, self)
+        #binding.pry
       end
     end
   end
@@ -52,10 +52,10 @@ class DistrictRepository
 end
 
 
-dr = DistrictRepository.new
-dr.load_data({
-               :enrollment => {
-                 :kindergarten => "./data/Kindergartners in full-day program.csv"
-               }
-             })
-puts dr.find_by_name("ACADEMY 20")
+# dr = DistrictRepository.new
+# dr.load_data({
+#                :enrollment => {
+#                  :kindergarten => "./data/Kindergartners in full-day program.csv"
+#                }
+#              })
+# puts dr.find_by_name("ACADEMY 20")
