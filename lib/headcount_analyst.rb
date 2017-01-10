@@ -82,7 +82,7 @@ class HeadcountAnalyst
             puts false
           end
 
-    elsif comparing_district[:for] != "STATEWIDE" && comparing_district[:for].class != Array
+    elsif comparing_district[:for] != "STATEWIDE" && comparing_district[:for].class == String
       kindergarten_average = math(@input.districts[comparing_district[:for]].enrollment_data.values)
       highschool_average = math(@input.districts[comparing_district[:for]].graduation_data.values)
       result = ((kindergarten_average*1000)/(highschool_average*1000)).round(3)
@@ -91,12 +91,41 @@ class HeadcountAnalyst
         else
           puts false
         end
-    elsif comparing_district.class == Array #maybe put :across in this logic for refactoring
-      district_averages = comparing_district[:across].each do |district|
-        math(@input.districts[against].enrollment_data.values)
-   end
-   
-   end
+    elsif comparing_district[:across].class == Array #maybe put :across in this logic for refactoring
+      district_averages = comparing_district[:across].map do |district|
+        kindergarten_average = math(@input.districts[district].enrollment_data.values)
+        highschool_average = math(@input.districts[district].graduation_data.values)
+        district_averages = ((kindergarten_average*1000)/(highschool_average*1000)).round(3)
+      end
+        true_false_count = district_averages.count do |correlation|
+          correlation > 0.6 && correlation < 1.5
+        end
+          if true_false_count > comparing_district[:across].count * 0.7
+            puts true
+          else
+            puts false
+          end
+    end
+
+
+
+      # @true_false_correlation = state_wide_correlation.map do |correlation|
+      #       if  correlation > 0.6 && correlation < 1.5
+      #         correlation = true
+      #       else
+      #         correlation = false
+      #       end
+      #     end
+      # end
+      #   correlation_true_count = @true_false_correlation.count do |correlation|
+      #     correlation == true
+      #   end
+      #     if correlation_true_count.to_f >= (@true_false_correlation.count * 0.7)
+      #       puts true
+      #     else
+      #       puts false
+      #     end
+      
    result
   end
 
@@ -139,6 +168,6 @@ end
     ha = HeadcountAnalyst.new(dr)
     # ha.kindergarten_participation_against_high_school_graduation("ACADEMY 20")
     # ha.kindergarten_participation_correlates_with_high_school_graduation(for: 'ACADEMY 20')
-    ha.kindergarten_participation_correlates_with_high_school_graduation(for: 'STATEWIDE')
-
+    # ha.kindergarten_participation_correlates_with_high_school_graduation(for: 'STATEWIDE')
+      ha.kindergarten_participation_correlates_with_high_school_graduation(across: ["ACADEMY 20", "ADAMS COUNTY 14"])
 
