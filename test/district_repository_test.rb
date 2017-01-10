@@ -15,20 +15,31 @@ class DistrictRepositoryTest < Minitest::Test
                        :kindergarten => "./data/Kindergartners in full-day program.csv"
                      }
                    })
-      @district = dr.find_by_name("ACADEMY 20")
+      #@district = dr.find_by_name("ACADEMY 20")
   end
 
   def test_data_is_loaded_by_find_by_name
     #passes
-    #binding.pry
     assert_equal "ACADEMY 20", @district.name
+  end 
 
+  def test_find_by_name 
+    district = dr.find_by_name("ACADEMY 20")
+    assert_equal District, district 
+  end   
+
+  def test_find_all_matching
+    #passes
+    assert_equal 7, @dr.find_all_matching("WE").count
   end
 
-  # def test_find_all_matching
-  #   #passes
-  #   assert_equal 7, @dr.find_all_matching("WE").count
-  # end
+    # dr.load_data({:enrollment => {:kindergarten => "./data/Kindergartners in full-day program.csv",
+    #                               :high_school_graduation => "./data/High school graduation rates.csv"}})
+
+  # puts dr.find_by_name("ACADEMY 20")
+ 
+
+
   #
   # def test_find_enrollment
   #   #passes

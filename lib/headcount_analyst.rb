@@ -73,10 +73,14 @@ class HeadcountAnalyst
             end
           end
       end
-        abalone = @true_false_correlation.count do |correlation|
+        correlation_true_count = @true_false_correlation.count do |correlation|
           correlation == true
         end
-        binding.pry
+          if correlation_true_count.to_f >= (@true_false_correlation.count * 0.7)
+            puts true
+          else
+            puts false
+          end
 
     elsif comparing_district[:for] != "STATEWIDE" && comparing_district[:for].class != Array
       kindergarten_average = math(@input.districts[comparing_district[:for]].enrollment_data.values)
