@@ -7,32 +7,24 @@ class HeadcountAnalyst
 
   end
 
-  def math(district)
-    #binding.pry
-    data_values = @input.districts[district].enrollment_data.values
-    count = 0
-    sum = data_values.reduce(0) do |sum, number|
-      # if number > 0.to_f
-        count += 1
-        sum + number
-      #
-    #end
-    end
-    average = sum/count
-    average
-  end
+  # def math(district)
+  #   data_values = @input.districts[district].enrollment_data.values
+  #   count = 0
+  #   sum = data_values.reduce(0) do |sum, number|
+  #       count += 1
+  #       sum + number
+  #   end
+  #   average = sum/count
+  #   average
+  # end
 
   def kindergarten_participation_rate_variation(name, against)
-    #name = name
     compare = against.values[0]
-    one = math(name)
-    two = math(compare)
-
+    one = math(@input.districts[name].enrollment_data.values)
+    two = math(@input.districts[district].graduation_data.values)
 
     result = (one*1000)/(two*1000)
     result.round(3)
-    #binding.pry
-
   end
 
   def kindergarten_participation_rate_variation_trend(name, compare)
@@ -56,9 +48,93 @@ class HeadcountAnalyst
     end
     final_hash
   end
+
+  def kindergarten_participation_against_high_school_graduation(district)
+    one = math(@input.districts[district].enrollment_data.values)
+    two = math(@input.districts[district].graduation_data.values)
+    
+
+    result = (one*1000)/(two*1000)
+    puts result.round(3)
+  end
+
+  def kindergarten_participation_correlates_with_high_school_graduation(comparing_district)
+    if comparing_district[:for] == "STATEWIDE"
+      state_wide_correlation = []
+      @input.districts.keys.each do |district|
+        kindergarten_average = math(@input.districts[district].enrollment_data.values)
+        highschool_average = math(@input.districts[district].graduation_data.values)
+        state_wide_correlation << ((kindergarten_average*1000)/(highschool_average*1000)).round(3)
+          @true_false_correlation = state_wide_correlation.map do |correlation|
+            if  correlation > 0.6 && correlation < 1.5
+              correlation = true
+            else
+              correlation = false
+            end
+          end
+      end
+        abalone = @true_false_correlation.count do |correlation|
+          correlation == true
+        end
+        binding.pry
+
+    elsif comparing_district[:for] != "STATEWIDE" && comparing_district[:for].class != Array
+      kindergarten_average = math(@input.districts[comparing_district[:for]].enrollment_data.values)
+      highschool_average = math(@input.districts[comparing_district[:for]].graduation_data.values)
+      result = ((kindergarten_average*1000)/(highschool_average*1000)).round(3)
+        if  result > 0.6 && result < 1.5
+          puts true
+        else
+          puts false
+        end
+    elsif comparing_district.class == Array #maybe put :across in this logic for refactoring
+      district_averages = comparing_district[:across].each do |district|
+        math(@input.districts[against].enrollment_data.values)
+   end
+   
+   end
+   result
+  end
+
+
+  
+  
+  
+  def math(district)
+    count = 0
+    sum = district.reduce(0) do |sum, number|
+      count += 1
+      sum + number
+    end
+    average = sum/count
+    average
+  end
+
+#   def kindergarten_participation_correlates_with_high_school_graduation(district)
+#   end
 end
 
 # dr = DistrictRepository.new
 # dr.load_data({:enrollment => {:kindergarten => "./data/Kindergartners in full-day program.csv"}})
-# ha = HeadcountAnalyst.new(dr)
+# er = EnrollmentRepository.new
+# er.load_data({
+#          :enrollment => {
+#            :kindergarten => "./data/Kindergartners in full-day program.csv",
+#            :high_school_graduation => "./data/High school graduation rates.csv"
+#          }
+#        })
+# e = er.find_by_name("COLORADO")
+# ha = HeadcountAnalyst.new(er)
+# ha.kindergarten_participation_against_high_school_graduation("ACADEMY 20")
 # ha.kindergarten_participation_rate_variation('ACADEMY 20', :against => 'YUMA SCHOOL DISTRICT 1')
+
+
+    dr = DistrictRepository.new
+    dr.load_data({:enrollment => {:kindergarten => "./data/Kindergartners in full-day program.csv",
+                                  :high_school_graduation => "./data/High school graduation rates.csv"}})
+    ha = HeadcountAnalyst.new(dr)
+    # ha.kindergarten_participation_against_high_school_graduation("ACADEMY 20")
+    # ha.kindergarten_participation_correlates_with_high_school_graduation(for: 'ACADEMY 20')
+    ha.kindergarten_participation_correlates_with_high_school_graduation(for: 'STATEWIDE')
+
+

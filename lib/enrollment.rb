@@ -3,13 +3,15 @@ require 'pry'
 class Enrollment
   attr_accessor :name,
                 :kindergarten_participation,
-                :graduation_rate
+                :high_school_graduation
+                # :data_tag
 
   def initialize(input)
     @name = input[:name]
     #binding.pry
     @kindergarten_participation = input[:kindergarten_participation]
-    @graduation_rate = input[:graduation_rate]
+    @high_school_graduation = Hash.new(0)
+    # @data_tag = data_tag
   end
 
   def kindergarten_participation_by_year
@@ -29,7 +31,7 @@ class Enrollment
 
   def graduation_rate_by_year
     new_hash = {}
-    @graduation_rate.each do |key, value|
+    @high_school_graduation.each do |key, value|
       key.to_i
       new_hash[key] = value
     end
@@ -37,6 +39,6 @@ class Enrollment
   end
 
   def graduation_rate_in_year(year)
-    @graduation_rate[year]
+    @high_school_graduation[year]
   end
 end
