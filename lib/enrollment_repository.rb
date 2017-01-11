@@ -29,7 +29,7 @@ class EnrollmentRepository
           end
         end
       end
-    end
+  end
   end
 
   def find_by_name(district_name)

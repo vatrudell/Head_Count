@@ -38,6 +38,7 @@ class DistrictRepository
       end
     end
   end
+end 
 
   def find_by_name(district_name)
     @districts[district_name]
@@ -54,7 +55,3 @@ class DistrictRepository
     @enrollment_instance.find_by_name(name)
   end
 end
-
-    # dr = DistrictRepository.new
-    # dr.load_data({:enrollment => {:kindergarten => "./data/Kindergartners in full-day program.csv",
-    #                               :high_school_graduation => "./data/High school graduation rates.csv"}})

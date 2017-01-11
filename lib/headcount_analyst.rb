@@ -53,6 +53,11 @@ class HeadcountAnalyst
           if  correlation > 0.6 && correlation < 1.5
             correlation = true
           else
+            puts false
+            puts correlation_true_count
+          end
+          #go back and exclude coloradey
+
             correlation = false
           end
         end
@@ -77,7 +82,7 @@ class HeadcountAnalyst
         end
     elsif comparing_district[:across].class == Array #maybe put :across in this logic for refactoring
       district_averages = comparing_district[:across].map do |district|
-        kindergarten_average = math(@input.districts[district].enrollment_data.values)
+        kindergarten_average = math(@inexput.districts[district].enrollment_data.values)
         highschool_average = math(@input.districts[district].graduation_data.values)
         district_averages = ((kindergarten_average*1000)/(highschool_average*1000)).round(3)
       end
@@ -101,4 +106,4 @@ class HeadcountAnalyst
     average = sum/count
     average
   end
-end
+end 
