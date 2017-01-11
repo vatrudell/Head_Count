@@ -31,7 +31,7 @@ class EnrollmentRepository
           end
         end
       end
-    # binding.pry
+    binding.pry
   end
 
   def find_by_name(district_name)
@@ -40,13 +40,13 @@ class EnrollmentRepository
 
 end
 
-# er = EnrollmentRepository.new
-# er.load_data({
-#          :enrollment => {
-#            :kindergarten => "./data/Kindergartners in full-day program.csv",
-#            :high_school_graduation => "./data/High school graduation rates.csv"
-#          }
-#        })
+er = EnrollmentRepository.new
+er.load_data({
+         :enrollment => {
+           :kindergarten => "./data/Kindergartners in full-day program.csv",
+           :high_school_graduation => "./data/High school graduation rates.csv"
+         }
+       })
 
 # e = er.find_by_name("COLORADO")
 # e.graduation_rate_by_year

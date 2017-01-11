@@ -129,3 +129,74 @@ result = (one*1000)/(two*1000)
 end
 
 end
+
+
+
+class StatewideTestRepository
+  attr_accessor :enrollments,
+                :data_tag,
+                :data
+  def initialize
+    @statewide_testing = {}
+  end
+
+ def load_data(input)
+  input[:statewide_testing].each do |name, value|
+      file = input[:statewide_testing][name]
+      @data = CSV.open(file, headers: true, header_converters: :symbol)
+        @data.each do |line|
+          if @statewide_testing[line[:location].upcase]
+            if name == :third_grade
+              @statewide_testing[line[:location].upcase].grade_three_proficient[line[:timeframe].to_i] = line[:data][0..4].to_f
+            elsif name == :eighth_grade
+              @statewide_testing[line[:location].upcase].grade_eight_proficient[line[:timeframe].to_i] = line[:data][0..4].to_f
+            elsif name == :math
+              @statewide_testing[line[:location].upcase].average_proficiency_by_ethnicity_math[line[:timeframe].to_i] = line[:data][0..4].to_f
+            elsif name == :reading
+              @statewide_testing[line[:location].upcase].average_proficiency_by_ethnicity_reading[line[:timeframe].to_i] = line[:data][0..4].to_f
+            elsif name == :writing
+              @statewide_testing[line[:location].upcase].average_proficiency_by_ethnicity_writing[line[:timeframe].to_i] = line[:data][0..4].to_f
+            end
+          else
+            if name == :third_grade
+              @statewide_testing[line[:location].upcase] = StatewideTest.new({name: line[:location].upcase, grade_three_proficient: {line[:timeframe].to_i => line[:data][0..4].to_f}})
+            elsif name == :eighth_grade
+              @statewide_testing[line[:location].upcase] = StatewideTest.new({name: line[:location].upcase, grade_eight_proficient: {line[:timeframe].to_i => line[:data][0..4].to_f}})
+            elsif name == :math
+              @statewide_testing[line[:location].upcase] = StatewideTest.new({name: line[:location].upcase, average_proficiency_by_ethnicity_math: {line[:timeframe].to_i => line[:data][0..4].to_f}})
+            elsif name == :reading
+              @statewide_testing[line[:location].upcase] = StatewideTest.new({name: line[:location].upcase, average_proficiency_by_ethnicity_reading: {line[:timeframe].to_i => line[:data][0..4].to_f}})
+            elsif name == :writing
+              @statewide_testing[line[:location].upcase] = StatewideTest.new({name: line[:location].upcase, average_proficiency_by_ethnicity_writing: {line[:timeframe].to_i => line[:data][0..4].to_f}})
+            end
+  
+          end
+        end
+      end
+  end
+
+  def find_by_name(district_name)
+    @enrollments[district_name]
+  end
+
+end
+
+str = StatewideTestRepository.new
+    str.load_data({
+                    :statewide_testing => {
+                      :third_grade => "./data/3rd grade students scoring proficient or above on the CSAP_TCAP.csv",
+                      :eighth_grade => "./data/8th grade students scoring proficient or above on the CSAP_TCAP.csv",
+                      :math => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Math.csv",
+                      :reading => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Reading.csv",
+                      :writing => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Writing.csv"
+                    }
+                  })
+
+
+
+
+      binding.pry 
+      @statewide_information.keys.each do |key|
+    
+        @grade_three_proficient if name == :third_grade
+        @grade_eight_proficient if name == :eighth_grade

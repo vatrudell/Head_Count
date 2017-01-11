@@ -80,7 +80,9 @@ class HeadcountAnalyst
             puts true
           else
             puts false
+            puts correlation_true_count
           end
+          #go back and exclude coloradey
 
     elsif comparing_district[:for] != "STATEWIDE" && comparing_district[:for].class == String
       kindergarten_average = math(@input.districts[comparing_district[:for]].enrollment_data.values)
@@ -93,7 +95,7 @@ class HeadcountAnalyst
         end
     elsif comparing_district[:across].class == Array #maybe put :across in this logic for refactoring
       district_averages = comparing_district[:across].map do |district|
-        kindergarten_average = math(@input.districts[district].enrollment_data.values)
+        kindergarten_average = math(@inexput.districts[district].enrollment_data.values)
         highschool_average = math(@input.districts[district].graduation_data.values)
         district_averages = ((kindergarten_average*1000)/(highschool_average*1000)).round(3)
       end
@@ -145,6 +147,7 @@ class HeadcountAnalyst
 
 #   def kindergarten_participation_correlates_with_high_school_graduation(district)
 #   end
+
 end
 
 # dr = DistrictRepository.new
@@ -168,6 +171,7 @@ end
     ha = HeadcountAnalyst.new(dr)
     # ha.kindergarten_participation_against_high_school_graduation("ACADEMY 20")
     # ha.kindergarten_participation_correlates_with_high_school_graduation(for: 'ACADEMY 20')
-    # ha.kindergarten_participation_correlates_with_high_school_graduation(for: 'STATEWIDE')
-      ha.kindergarten_participation_correlates_with_high_school_graduation(across: ["ACADEMY 20", "ADAMS COUNTY 14"])
+    ha.kindergarten_participation_correlates_with_high_school_graduation(for: 'STATEWIDE')
+      #ha.kindergarten_participation_correlates_with_high_school_graduation(across: ["ACADEMY 20", "ADAMS COUNTY 14"])
+
 
