@@ -4,14 +4,11 @@ class Enrollment
   attr_accessor :name,
                 :kindergarten_participation,
                 :high_school_graduation
-                # :data_tag
 
   def initialize(input)
     @name = input[:name]
-    #binding.pry
     @kindergarten_participation = input[:kindergarten_participation]
     @high_school_graduation = Hash.new(0)
-    # @data_tag = data_tag
   end
 
   def kindergarten_participation_by_year
@@ -22,12 +19,10 @@ class Enrollment
     end
     new_hash
   end
-  ## revisit "truncate" method or class?
 
   def kindergarten_participation_in_year(year)
     if year
     @kindergarten_participation[year]
-    #binding.pry
   end
 
   def graduation_rate_by_year

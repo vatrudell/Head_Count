@@ -6,52 +6,60 @@ require 'pry'
 
 
 class DistrictTest < Minitest::Test
-  attr_reader :boop,
-              :d_repo
+  attr_reader :district,
+              :district_repository,
+              :name_of_district
   def setup
-      @boop = District.new({:name => "ACADEMY 20"})
-      @d_repo = DistrictRepository.new
-      @d_repo.load_data({
-                     :enrollment => {
-                       :kindergarten => "./data/Kindergartners in full-day program.csv"}})
+      @district  = District.new({:name => "ACADEMY 20"})
+      @district_repository = DistrictRepository.new
+      district_repository.load_data({
+               :enrollment => {
+                 :kindergarten => "./data/Kindergartners in full-day program.csv",
+                 :high_school_graduation => "./data/High school graduation rates.csv"
+               }
+             })
 
-      @district = @d_repo.find_by_name("ACADEMY 20")
+      @name_of_district = district_repository.find_by_name("ACADEMY 20")
   end
 
   def test_district_is_created
     #passes
-    assert_equal "ACADEMY 20", boop.name
+    assert_equal "ACADEMY 20", district.name
   end
 
-  def test_ditrict_is_created_through_repository
+  def test_enrollment_data
     #passes
-    assert_equal "ACADEMY 20", @district.name
+    enrollment =  {2007=>0.391,
+                 2006=>0.353,
+                 2005=>0.267,
+                 2004=>0.302,
+                 2008=>0.384,
+                 2009=>0.39,
+                 2010=>0.436,
+                 2011=>0.489,
+                 2012=>0.478,
+                 2013=>0.487,
+                 2014=>0.49}
+    assert_equal  enrollment, name_of_district.enrollment_data
   end
 
-  def find_enrollment
-    #passes
-    enrollment =  {"2007"=>"0.39159",
-   "2006"=>"0.35364",
-   "2005"=>"0.26709",
-   "2004"=>"0.30201",
-   "2008"=>"0.38456",
-   "2009"=>"0.39",
-   "2010"=>"0.43628",
-   "2011"=>"0.489",
-   "2012"=>"0.47883",
-   "2013"=>"0.48774",
-   "2014"=>"0.49022"}
-    assert_equal  enrollment, @district.enrollment
-
+  def test_graduation_data
+    graduation = {2010=>0.895,
+                  2011=>0.895,
+                  2012=>0.889,
+                  2013=>0.913,
+                  2014=>0.898}
+    actual = @name_of_district.graduation_data
+    assert_equal graduation, actual
   end
 
   def test_find_enrollment_in_kindergarden_year
     #passes
-    data_1 = @district.enrollment.kindergarten_participation_in_year(2004)
-    data_2 = @district.enrollment.kindergarten_participation_in_year(2005)
-    data_3 = @district.enrollment.kindergarten_participation_in_year(2008)
-    data_4 = @district.enrollment.kindergarten_participation_in_year(2010)
-    data_5 = @district.enrollment.kindergarten_participation_in_year(2012)
+    data_1 = @name_of_district.enrollment.kindergarten_participation_in_year(2004)
+    data_2 = @name_of_district.enrollment.kindergarten_participation_in_year(2005)
+    data_3 = @name_of_district.enrollment.kindergarten_participation_in_year(2008)
+    data_4 = @name_of_district.enrollment.kindergarten_participation_in_year(2010)
+    data_5 = @name_of_district.enrollment.kindergarten_participation_in_year(2012)
 
     assert_equal 0.3020, data_1
     assert_equal 0.2670, data_2

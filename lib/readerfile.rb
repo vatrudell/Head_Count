@@ -39,7 +39,7 @@ def load_data(input)
 
 
  def load_data(input)
-    
+
     # kindergarten = input[:enrollment][:kindergarten]
     # highschool = input[:enrollment][:high_school_graduation]
     # file = input[:enrollment][:kindergarten]  #thats probably hardcoded in there
@@ -61,16 +61,16 @@ def load_data(input)
         # @data_tag = "high_school_graduation_rate"
         @data = CSV.open(file, headers: true, header_converters: :symbol)
           @data.each do |line|
-          
+
             if @enrollments[line[:location].upcase]
               @enrollments[line[:location].upcase].high_school_graduation[line[:timeframe].to_i] = line[:data][0..4].to_f
               binding.pry
             else
               @enrollments[line[:location].upcase] = Enrollment.new({name: line[:location].upcase, high_school_graduation: {line[:timeframe].to_i => line[:data][0..4].to_f}})
             end
-            
+
           end
-       
+
       else
         puts "Fuck"
       end
@@ -96,7 +96,7 @@ def populate_data #kindergarten
  def kindergarten_participation_against_high_school_graduation(district)
   data_to_math << @enrollments[district].kindergarten_participation.values
   data_to_math << @enrollments[district].high_school_graduation.values
-  
+
   count = 0
   data_to_math.each do |data|
     sum = data.reduce(0) do |sum, number|
@@ -110,7 +110,7 @@ def populate_data #kindergarten
 
 
   def math(district)
-    
+
     count = 0
     sum = district.reduce(0) do |sum, number|
         count += 1
@@ -129,6 +129,7 @@ result = (one*1000)/(two*1000)
 end
 
 end
+
 
 
 
@@ -199,4 +200,4 @@ str = StatewideTestRepository.new
       @statewide_information.keys.each do |key|
     
         @grade_three_proficient if name == :third_grade
-        @grade_eight_proficient if name == :eighth_grade
+
