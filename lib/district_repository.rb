@@ -2,16 +2,19 @@ require 'csv'
 require 'pry'
 require_relative 'district'
 require_relative 'enrollment_repository'
+require_relative 'statewide_test_repository'
 
 class DistrictRepository
   attr_accessor :districts,
                 :enrollment_instance,
                 :data,
-                :file
+                :file,
+                :statewide_instance
 
   def initialize
     @districts = {}
     @enrollment_instance = EnrollmentRepository.new
+    @statewide_instance = StatewideTestRepository.new
   end
 
   def load_data(input)
@@ -36,6 +39,7 @@ class DistrictRepository
         end
       end
     end
+    statewide_instance.load_data(input)
   end
 
   def find_by_name(district_name)
@@ -52,4 +56,25 @@ class DistrictRepository
   def find_enrollment(name)
     enrollment_instance.find_by_name(name)
   end
+
+  def find_statewide_test(name)
+    statewide_instance.find_by_name(name)
+  end
 end
+
+dr = DistrictRepository.new
+dr.load_data({
+  :enrollment => {
+    :kindergarten => "./data/Kindergartners in full-day program.csv",
+    :high_school_graduation => "./data/High school graduation rates.csv",
+  },
+  :statewide_testing => {
+    :third_grade => "./data/3rd grade students scoring proficient or above on the CSAP_TCAP.csv",
+    :eighth_grade => "./data/8th grade students scoring proficient or above on the CSAP_TCAP.csv",
+    :math => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Math.csv",
+    :reading => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Reading.csv",
+    :writing => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Writing.csv"
+  }
+})
+district = dr.find_by_name("ACADEMY 20")
+statewide_test = district.statewide_test

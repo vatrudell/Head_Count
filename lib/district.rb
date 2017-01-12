@@ -18,6 +18,6 @@ class District
   end
   
   def statewide_test
-    @dr.find_statewide_test(@name)
+    dr.find_statewide_test(name)
   end
 end
