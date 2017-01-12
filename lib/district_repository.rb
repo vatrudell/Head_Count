@@ -39,7 +39,9 @@ class DistrictRepository
         end
       end
     end
-    statewide_instance.load_data(input)
+    if input.keys.include?(:statewide_testing)
+      statewide_instance.load_data(input)
+    end
   end
 
   def find_by_name(district_name)
