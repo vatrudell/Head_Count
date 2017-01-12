@@ -9,15 +9,14 @@ class StatewideTestRepository
     @statewide_information = Hash.new(0)
   end
 
+
   def load_data(input)     
-      input[:statewide_testing].each do |name, value| 
-    
+      input[:statewide_testing].each do |name, value|  
         file = input[:statewide_testing][name]
         @data = CSV.open(file, headers: true, header_converters: :symbol)
         @data.each do |line|  
           @district_name = line[:location].upcase
           @year = line[:timeframe].to_i
-
             if line[:score] == "Math"
               @concentration = :math
             elsif line[:score] == "Writing"
@@ -25,13 +24,11 @@ class StatewideTestRepository
             elsif line[:score] == "Reading"
               @concentration = :reading
             end
-
             if line[:data].nil?
               @district_data =  "N/A"
             else
               @district_data =  (line[:data][0..4].to_f)
             end
-
             if line[:race_ethnicity] == "All Students"
               @race = :all_students
             elsif line[:race_ethnicity] == "Asian"
@@ -48,9 +45,7 @@ class StatewideTestRepository
               @race = :two_or_more
             elsif line[:race_ethnicity] == "White"
               @race = :white
-            end
-          
-            
+            end          
           if @statewide_information.keys.include? @district_name.upcase
             if name == :third_grade
               if @statewide_information[@district_name.upcase].grade_three_proficient.has_key? @year
@@ -123,7 +118,7 @@ class StatewideTestRepository
         end  
       end
     end 
-
+  
     def find_by_name(district)
       @statewide_information[district]
     end
@@ -139,6 +134,7 @@ str = StatewideTestRepository.new
                       :writing => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Writing.csv"
                     }
                   })
+
     str.find_by_name("ACADEMY 20")
     abalone = str.find_by_name("ACADEMY 20")
     abalone.proficient_by_grade(3)
