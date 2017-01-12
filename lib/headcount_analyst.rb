@@ -10,7 +10,6 @@ class HeadcountAnalyst
   def kindergarten_participation_rate_variation(name, against)
     compare = against.values[0]
     one = math(input.districts[name].enrollment_data.values)
-    binding.pry
     two = math(input.districts[compare].graduation_data.values)
     result = (one*1000)/(two*1000)
     result.round(3)
@@ -66,7 +65,6 @@ class HeadcountAnalyst
         else
           puts false
         end
-      
     elsif comparing_district[:for] != "STATEWIDE" && comparing_district[:for].class == String
       kindergarten_average = math(input.districts[comparing_district[:for]].enrollment_data.values)
       highschool_average = math(input.districts[comparing_district[:for]].graduation_data.values)
@@ -102,11 +100,3 @@ class HeadcountAnalyst
     average = sum/count
   end
 end
-
-
-    dr = DistrictRepository.new
-    dr.load_data({:enrollment => {:kindergarten => "./data/Kindergartners in full-day program.csv",
-                                  :high_school_graduation => "./data/High school graduation rates.csv"}})
-    ha = HeadcountAnalyst.new(dr)
-
-   ha.kindergarten_participation_correlates_with_high_school_graduation(:for => 'STATEWIDE')
