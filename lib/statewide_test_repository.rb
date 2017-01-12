@@ -10,11 +10,11 @@ class StatewideTestRepository
   end
 
 
-  def load_data(input)     
-      input[:statewide_testing].each do |name, value|  
+  def load_data(input)
+      input[:statewide_testing].each do |name, value|
         file = input[:statewide_testing][name]
         @data = CSV.open(file, headers: true, header_converters: :symbol)
-        @data.each do |line|  
+        @data.each do |line|
           @district_name = line[:location].upcase
           @year = line[:timeframe].to_i
             if line[:score] == "Math"
@@ -45,22 +45,22 @@ class StatewideTestRepository
               @race = :two_or_more
             elsif line[:race_ethnicity] == "White"
               @race = :white
-            end          
+            end
           if @statewide_information.keys.include? @district_name.upcase
             if name == :third_grade
               if @statewide_information[@district_name.upcase].grade_three_proficient.has_key? @year
                 new_statewide = {}
                 new_statewide[@concentration] = @district_data
                 @statewide_information[@district_name.upcase].grade_three_proficient[@year].merge!(new_statewide)
-              else 
+              else
                 @statewide_information[@district_name.upcase].grade_three_proficient.store(@year, {@concentration => @district_data})
-              end 
+              end
             elsif name == :eighth_grade
               if @statewide_information[@district_name.upcase].grade_eight_proficient.has_key? @year
                 new_statewide = {}
                 new_statewide[@concentration] = @district_data
                 @statewide_information[@district_name.upcase].grade_eight_proficient[@year].merge!(new_statewide)
-              else 
+              else
                 @statewide_information[@district_name.upcase].grade_eight_proficient.store(@year, {@concentration => @district_data})
               end
             elsif name == :math
@@ -103,7 +103,7 @@ class StatewideTestRepository
                 else
                   new_statewide = {}
                   new_statewide[@year] = {name => @district_data}
-                  @statewide_information[@district_name.upcase].average_proficiency[@race].merge!(new_statewide) 
+                  @statewide_information[@district_name.upcase].average_proficiency[@race].merge!(new_statewide)
                 end
               else
                 @statewide_information[@district_name.upcase].average_proficiency.store(@race, {@year => {name => @district_data}})
@@ -112,32 +112,14 @@ class StatewideTestRepository
                   @statewide_information[@district_name.upcase].average_proficiency[@race].merge!(new_statewide)
               end
             end
-          elsif name == :third_grade  
-            @statewide_information[@district_name.upcase] =  StatewideTest.new({:name => @district_name, :grade_three_proficient => {@year => {@concentration => @district_data}}})      
-          end  
-        end  
+          elsif name == :third_grade
+            @statewide_information[@district_name.upcase] =  StateWideTest.new({:name => @district_name, :grade_three_proficient => {@year => {@concentration => @district_data}}})
+          end
+        end
       end
-    end 
-  
+    end
+
     def find_by_name(district)
       @statewide_information[district]
     end
   end
-
-# str = StatewideTestRepository.new
-#     str.load_data({
-#                     :statewide_testing => {
-#                       :third_grade => "./data/3rd grade students scoring proficient or above on the CSAP_TCAP.csv",
-#                       :eighth_grade => "./data/8th grade students scoring proficient or above on the CSAP_TCAP.csv",
-#                       :math => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Math.csv",
-#                       :reading => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Reading.csv",
-#                       :writing => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Writing.csv"
-#                     }
-#                   })
-
-#     str.find_by_name("ACADEMY 20")
-#     abalone = str.find_by_name("ACADEMY 20")
-#     abalone.proficient_by_grade(3)
-#     abalone.proficient_by_race_or_ethnicity(:white)
-#     abalone.proficient_for_subject_by_grade_in_year(:math, 8, 2010)
-#     abalone.proficient_for_subject_by_race_in_year(:math, :asian, 2011)
