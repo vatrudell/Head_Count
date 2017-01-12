@@ -44,7 +44,9 @@ class HeadcountAnalyst
   def kindergarten_participation_correlates_with_high_school_graduation(comparing_district)
     if comparing_district[:for] == "STATEWIDE"
       state_wide_correlation = []
-      input.districts.keys.each do |district|
+      districts_to_run = input.districts.keys
+      districts_to_run.delete("COLORADO")
+      districts_to_run.each do |district|
         kindergarten_average = math(input.districts[district].enrollment_data.values)
         highschool_average = math(input.districts[district].graduation_data.values)
         state_wide_correlation << ((kindergarten_average*1000)/(highschool_average*1000)).round(3)

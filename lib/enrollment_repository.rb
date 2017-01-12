@@ -7,7 +7,7 @@ class EnrollmentRepository
                 :data
   def initialize
     @enrollments = {}
-    @data
+    @data = data
   end
 
   def load_data(input)
