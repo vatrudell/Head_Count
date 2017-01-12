@@ -13,7 +13,6 @@ class HeadcountAnalyst
     two = math(input.districts[compare].graduation_data.values)
     result = (one*1000)/(two*1000)
     result.round(3)
-    #binding.pry
   end
 
   def kindergarten_participation_rate_variation_trend(name, compare)
@@ -44,7 +43,9 @@ class HeadcountAnalyst
   def kindergarten_participation_correlates_with_high_school_graduation(comparing_district)
     if comparing_district[:for] == "STATEWIDE"
       state_wide_correlation = []
-      input.districts.keys.each do |district|
+      districts_to_run = input.districts.keys
+      districts_to_run.delete("COLORADO")
+      districts_to_run.each do |district|
         kindergarten_average = math(input.districts[district].enrollment_data.values)
         highschool_average = math(input.districts[district].graduation_data.values)
         state_wide_correlation << ((kindergarten_average*1000)/(highschool_average*1000)).round(3)
@@ -60,9 +61,9 @@ class HeadcountAnalyst
         correlation == true
       end
         if correlation_true_count.to_f >= (@true_false_correlation.count * 0.7)
-          true
+          puts true
         else
-          false
+          puts false
         end
     elsif comparing_district[:for] != "STATEWIDE" && comparing_district[:for].class == String
       kindergarten_average = math(input.districts[comparing_district[:for]].enrollment_data.values)
