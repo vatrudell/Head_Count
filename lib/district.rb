@@ -9,8 +9,12 @@ class District
   def initialize(district, dr = false)
     @name =  district[:name]
     @dr = dr
-    @enrollment_data = district[:enrollment_data]
-    @graduation_data = Hash.new(0)
+    # @enrollment_data = district[:enrollment_data]
+    # @graduation_data = Hash.new(0)
+    #below will be here, above will not
+    # district_object_enrollment_link = enrollment_object
+    #
+    # district_object_statewidetest_link = statewidetest_object
   end
 
   def enrollment

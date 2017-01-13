@@ -61,9 +61,9 @@ class HeadcountAnalyst
         correlation == true
       end
         if correlation_true_count.to_f >= (@true_false_correlation.count * 0.7)
-          puts true
+         true
         else
-          puts false
+         false
         end
     elsif comparing_district[:for] != "STATEWIDE" && comparing_district[:for].class == String
       kindergarten_average = math(input.districts[comparing_district[:for]].enrollment_data.values)
@@ -91,12 +91,12 @@ class HeadcountAnalyst
     end
   end
 
-  def math(district)
-    count = 0
-    sum = district.reduce(0) do |sum, number|
-      count += 1
-      sum + number
-    end
-    average = sum/count
+  def math(district_data_values)  #rename to average
+      district_data_values.reduce(:&)/district_data_values.count
+    # 
+    # district_data_values.reduce(0) do |sum, number|
+    #
+    #   sum + number
+    # end/district_data_values.count
   end
 end
