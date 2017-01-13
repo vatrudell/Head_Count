@@ -1,27 +1,22 @@
-require 'pry'
-
 class District
   attr_accessor :name,
-                :dr,
-                :enrollment_data,
-                :graduation_data
+                :d_repo,
+                :enrollment_link,
+                :statewide_test_link
 
-  def initialize(district, dr = false)
-    @name =  district[:name]
-    @dr = dr
-    # @enrollment_data = district[:enrollment_data]
-    # @graduation_data = Hash.new(0)
-    #below will be here, above will not
-    # district_object_enrollment_link = enrollment_object
-    #
-    # district_object_statewidetest_link = statewidetest_object
+  def initialize(name, d_repo = false)
+    @name =  name
+    @d_repo = d_repo
+    @enrollment_link = enrollment_link
+    @statewide_test_link = statewide_test_link
   end
 
   def enrollment
-    dr.find_enrollment(name)
+      #binding.pry
+      d_repo.find_enrollment(name)
   end
 
   def statewide_test
-    dr.find_statewide_test(name)
+    d_repo.find_statewide_test(name)
   end
 end

@@ -35,11 +35,7 @@ module Sanitation
   #   @cleaned_file = original_file.tap do |line|
   #     binding.pry
   #     #@line = (
-  #     @name = line[:location].upcase
-  #     @concentration = line[:score] unless :score == nil
-  #     @race = line[:race_ethnicity] unless :race_ethnicity == nil
-  #     @year = line[:timeframe].to_i
-  #     @data = line[:data][0..4].to_f #)
+  #             
   #
   #     return line
   #   end
