@@ -1,7 +1,5 @@
 require './test/test_helper'
-require 'minitest/autorun'
-require 'minitest/pride'
-require 'pry'
+require_relative '../lib/enrollment_repository'
 
 class EnrollmentRepositoryTest < Minitest::Test
   attr_reader :er,
@@ -40,9 +38,5 @@ class EnrollmentRepositoryTest < Minitest::Test
 
   def test_enrollment_is_created_through_enrollment_repo
     assert_equal "ACADEMY 20", enrollment_in_district.name
-  end
-
-  def test_find_by_name
-    assert_equal Enrollment, enrollment_in_district.class
   end
 end
