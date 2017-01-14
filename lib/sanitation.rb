@@ -11,7 +11,7 @@ module Sanitation
 
   def clean_up_district(input)
     clean_loaded_data(input)
-    #populate_district_data(input)
+    populate_district_data(input)
   end
 
   def clean_up_enrollment_data(input)
@@ -36,7 +36,7 @@ module Sanitation
       @race = line[:race_ethnicity] unless :race_ethnicity == nil
       @year = line[:timeframe].to_i
       @data = line[:data][0..4].to_f
-
+      #
 
       return
       #choose_destiny(input)     #

@@ -28,6 +28,7 @@ class DistrictRepository
 
   def populate_district_data(input)
     @enrollment_repository.load_data(input)
+    binding.pry
     # if districts.keys.include?(@name)
     #   # enrollment_repository.load_data(input)
     #
