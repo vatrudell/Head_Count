@@ -20,7 +20,7 @@ module Sanitation
   #  end
  end
 
-  def clean_loaded_data(input)
+  def clean_up_enrollment_data(input)
     #binding.pry
     input[:enrollment].values.each do |file|
      opened_file = CSV.open(file, headers: true, header_converters: :symbol)
@@ -35,6 +35,17 @@ module Sanitation
   end
 
 end
+
+def clean_up_district_data(input)
+  input[:enrollment].values.each do |file|
+     opened_file = CSV.open(file, headers: true, header_converters: :symbol)
+     opened_file.map do |line|
+      @name = line[:location].upcase
+      populate_district_data
+    end
+  end
+end
+
 
 
 

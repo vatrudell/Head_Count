@@ -12,7 +12,9 @@ class EnrollmentRepository
   end
 
   def load_data(input)
-    clean_loaded_data(input)
+    # input[:enrollment].values.each do |file|
+      clean_up_enrollment_data(input)
+    
   end
 
   def populate_kindergarten_data
