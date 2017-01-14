@@ -12,7 +12,7 @@ class District
   end
 
   def enrollment
-      #binding.pry
+      #chbinding.pry
       d_repo.find_enrollment(name)
   end
 

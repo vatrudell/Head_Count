@@ -1,7 +1,5 @@
 require './test/test_helper'
-require 'minitest/autorun'
-require 'minitest/pride'
-require 'pry'
+require_relative '../lib/district'
 
 
 

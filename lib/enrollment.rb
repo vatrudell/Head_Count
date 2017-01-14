@@ -10,12 +10,10 @@ class Enrollment
     @name = input[:name]
     @kindergarten_participation = input[:kindergarten_participation]
     @high_school_graduation = Hash.new(0)
-    @new_hash = Hash.new(0)
   end
 
   def kindergarten_participation_by_year
     kindergarten_participation.each do |key, value|
-      key.to_i
       new_hash[key] = value
     end
   end
@@ -26,7 +24,6 @@ class Enrollment
 
   def graduation_rate_by_year
     high_school_graduation.each do |key, value|
-      key.to_i
       new_hash[key] = value
     end
   end

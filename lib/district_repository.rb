@@ -10,10 +10,11 @@ class DistrictRepository
                 :enrollment_repository,
                 :statewide_test_repository,
                 :hash_of_clean_data
-                # ,   :name,
-                # :concentration,               :race,
-                # :year,                        :data,
-
+                # :name,
+                # :concentration,
+                # :race,
+                # :year,
+                # :data
 
   def initialize
     @district_repository = {}
@@ -25,6 +26,7 @@ class DistrictRepository
   def load_data(input)
      input[:enrollment].values.each do |file|
       opened_file = CSV.open(file, headers: true, header_converters: :symbol)
+      #this goes to  sanitation file
       opened_file.map do |line|
         name = line[:location].upcase
         concentration = line[:score] unless :score == nil
@@ -37,16 +39,19 @@ class DistrictRepository
                                      :year => year,
                                      :data => data}
       end
+      ####################################
+
     end
+    #this stays
     @hash_of_clean_data.each_key do |name_in_line|
-      if district_repository[name_in_line].nil?  #put find_all_matching
+      if district_repository[name_in_line]  #.nil?  #put find_all_matching #need to ask if dis. object exists
         district_repository[name_in_line] = District.new(name_in_line, self)
       else
+        puts "poop"
         enrollment_repository.load_data(hash_of_clean_data)
-        @enrollment_link = enrollment_repository.find_by_name(name_in_line)
+        #@enrollment_link = enrollment_repository.find_by_name(name_in_line)
       end
     end
-
   end
 
   def find_by_name(district_name)

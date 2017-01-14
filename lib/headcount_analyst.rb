@@ -1,4 +1,4 @@
-require_relative 'district_repository'
+require_relative '../lib/district_repository'
 require 'pry'
 
 class HeadcountAnalyst
@@ -93,7 +93,7 @@ class HeadcountAnalyst
 
   def math(district_data_values)  #rename to average
       district_data_values.reduce(:&)/district_data_values.count
-    # 
+    #
     # district_data_values.reduce(0) do |sum, number|
     #
     #   sum + number
