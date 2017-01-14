@@ -1,18 +1,13 @@
 class District
   attr_accessor :name,
-                :d_repo,
-                :enrollment_link,
-                :statewide_test_link
+                :d_repo
 
   def initialize(name, d_repo = false)
     @name =  name
     @d_repo = d_repo
-    @enrollment_link = enrollment_link
-    @statewide_test_link = statewide_test_link
   end
 
   def enrollment
-      #chbinding.pry
       d_repo.find_enrollment(name)
   end
 

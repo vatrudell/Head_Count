@@ -1,7 +1,5 @@
 require 'csv'
 require 'pry'
-#you can't have each file requirering each other
-#require './lib/district_repository'
 
 module Sanitation
   attr_reader    :name,
@@ -10,18 +8,26 @@ module Sanitation
                  :year,
                  :data
 
- def choose_destiny(input)
-   populate_high_school_data if input[:enrollment].keys.include?(:high_school_graduation) && 
-   populate_kindergarten_data if input[:enrollment].keys.include?(:kindergarten)
 
+  def clean_up_district(input)
+    clean_loaded_data(input)
+    #populate_district_data(input)
+  end
 
-  #  else
-  #    puts "derp"
-  #  end
- end
+  def clean_up_enrollment_data(input)
+    clean_loaded_data(input)
+    choose_destiny(input)
+  end
+
+  def choose_destiny(input)
+    if input[:enrollment].keys.include?(:high_school_graduation)
+      populate_high_school_data
+    elsif input[:enrollment].keys.include?(:kindergarten)
+      populate_kindergarten_data
+    end
+  end
 
   def clean_loaded_data(input)
-    #binding.pry
     input[:enrollment].values.each do |file|
      opened_file = CSV.open(file, headers: true, header_converters: :symbol)
      opened_file.map do |line|
@@ -30,10 +36,12 @@ module Sanitation
       @race = line[:race_ethnicity] unless :race_ethnicity == nil
       @year = line[:timeframe].to_i
       @data = line[:data][0..4].to_f
-      choose_destiny(input)
+
+
+      return
+      #choose_destiny(input)     #
     end
   end
-
 end
 
 
