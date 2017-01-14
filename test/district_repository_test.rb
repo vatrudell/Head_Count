@@ -25,59 +25,56 @@ class DistrictRepositoryTest < Minitest::Test
   def test_find_all_matching
     assert_equal 7, dr.find_all_matching("WE").count
   end
-
-  def test_full_path_of_enrollment
-    #passes
-    data = name_of_district.enrollment.kindergarten_participation_in_year(2005)
-    assert_equal 0.2670, data
-  end
-
-  def test_kindergarten_participation_by_year
-    skip
-    #passes
-    data = name_of_district.enrollment.kindergarten_participation_by_year
-    enrollment = {2007=>0.391,
-                  2006=>0.353,
-                  2005=>0.267,
-                  2004=>0.302,
-                  2008=>0.384,
-                  2009=>0.39,
-                  2010=>0.436,
-                  2011=>0.489,
-                  2012=>0.478,
-                  2013=>0.487,
-                  2014=>0.49}
-    assert_equal enrollment, data
-  end
-
-  def test_participation_in_year
-    skip
-    #passes
-    actual = name_of_district.enrollment.kindergarten_participation_in_year(2008)
-    expected = 0.384
-    assert_equal expected, actual
-  end
-
-  def test_graduation_by_year
-    skip
-    #passes
-    actual = name_of_district.enrollment.graduation_rate_by_year
-    expected = {2010=>0.895,
-                2011=>0.895,
-                2012=>0.889,
-                2013=>0.913,
-                2014=>0.898}
-    assert_equal expected, actual
-  end
-
-  def test_participation_in_year
-    skip
-    #passes
-    actual = name_of_district.enrollment.graduation_rate_in_year(2010)
-    expected = 0.895
-    assert_equal expected, actual
-  end
 end
+#   def test_full_path_of_enrollment
+#     # binding.pry
+#     data = name_of_district.enrollment.kindergarten_participation_in_year(2005)
+#     assert_equal 0.2670, data
+#   end
+#
+#   def test_kindergarten_participation_by_year
+#     skip
+#
+#     data = name_of_district.enrollment.kindergarten_participation_by_year
+#     enrollment = {2007=>0.391,
+#                   2006=>0.353,
+#                   2005=>0.267,
+#                   2004=>0.302,
+#                   2008=>0.384,
+#                   2009=>0.39,
+#                   2010=>0.436,
+#                   2011=>0.489,
+#                   2012=>0.478,
+#                   2013=>0.487,
+#                   2014=>0.49}
+#     assert_equal enrollment, data
+#   end
+#
+#   def test_participation_in_year
+#     skip
+#     actual = name_of_district.enrollment.kindergarten_participation_in_year(2008)
+#     expected = 0.384
+#     assert_equal expected, actual
+#   end
+#
+#   def test_graduation_by_year
+#     skip
+#     actual = name_of_district.enrollment.graduation_rate_by_year
+#     expected = {2010=>0.895,
+#                 2011=>0.895,
+#                 2012=>0.889,
+#                 2013=>0.913,
+#                 2014=>0.898}
+#     assert_equal expected, actual
+#   end
+#
+#   def test_participation_in_year
+#     skip
+#     actual = name_of_district.enrollment.graduation_rate_in_year(2010)
+#     expected = 0.895
+#     assert_equal expected, actual
+#   end
+# end
 
   ##add to each test if wrong year is loaded in there
   ##find all results of all district names for each methods

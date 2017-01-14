@@ -1,5 +1,5 @@
 require 'csv'
-require './lib/statewide_test'
+require_relative '../lib/statewide_test'
 require 'pry'
 
 class StatewideTestRepository

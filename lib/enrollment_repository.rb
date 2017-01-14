@@ -1,40 +1,46 @@
 require 'csv'
-require_relative 'enrollment'
+require_relative '../lib/enrollment'
+require_relative '../lib/sanitation'
 require 'pry'
 
 class EnrollmentRepository
+  include Sanitation
   attr_accessor :enrollments,
-                :data
+                :clean_enrollments_data
   def initialize
     @enrollments = {}
-    @data = data
   end
 
   def load_data(input)
-    input[:enrollment].each do |name, value|
-      file = input[:enrollment][name]
-      data = CSV.open(file, headers: true, header_converters: :symbol)
-      data.each do |line|
-        if enrollments[line[:location].upcase]
-          if name == :kindergarten
-            enrollments[line[:location].upcase].kindergarten_participation[line[:timeframe].to_i] = line[:data][0..4].to_f
-          elsif
-            name == :high_school_graduation
-            enrollments[line[:location].upcase].high_school_graduation[line[:timeframe].to_i] = line[:data][0..4].to_f
-          end
-        else
-          if name == :kindergarten
-            enrollments[line[:location].upcase] = Enrollment.new({name: line[:location].upcase, kindergarten_participation: {line[:timeframe].to_i => line[:data][0..4].to_f}})
-          elsif name == :high_school_graduation
-            enrollments[line[:location].upcase] = Enrollment.new({name: line[:location].upcase, high_school_graduation: {line[:timeframe].to_i => line[:data][0..4].to_f}})
-          end
-        end
-      end
+    clean_loaded_data(input)
+  end
+
+  def populate_kindergarten_data
+    if enrollments.keys.include?(@name)
+     enrollments[@name].kindergarten_participation[@year] = @data
+    else
+     enrollments[@name] = Enrollment.new({
+       name: @name,
+       kindergarten_participation: {@year => @data}})
     end
   end
 
+  def populate_high_school_data
+    if enrollments.keys.include?(@name)
+      enrollments[@name].high_school_graduation[@year] = @data
+
+    else
+       enrollments[@name] = Enrollment.new({
+         name: @name,
+         high_school_graduation: {@year => @data}})
+     end
+  end
+
+  def test_method
+    binding.pry
+  end
+
   def find_by_name(district_name)
-  
     enrollments[district_name]
   end
 end

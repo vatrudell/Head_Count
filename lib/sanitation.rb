@@ -4,23 +4,80 @@ require 'pry'
 #require './lib/district_repository'
 
 module Sanitation
+  attr_reader    :name,
+                 :concentration,
+                 :race,
+                 :year,
+                 :data
+
+ def choose_destiny(input)
+   populate_high_school_data if input[:enrollment].keys.include?(:high_school_graduation) && 
+   populate_kindergarten_data if input[:enrollment].keys.include?(:kindergarten)
+
+
+  #  else
+  #    puts "derp"
+  #  end
+ end
+
+  def clean_loaded_data(input)
+    #binding.pry
+    input[:enrollment].values.each do |file|
+     opened_file = CSV.open(file, headers: true, header_converters: :symbol)
+     opened_file.map do |line|
+      @name = line[:location].upcase
+      @concentration = line[:score] unless :score == nil
+      @race = line[:race_ethnicity] unless :race_ethnicity == nil
+      @year = line[:timeframe].to_i
+      @data = line[:data][0..4].to_f
+      choose_destiny(input)
+    end
+  end
+
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   #this is what is send here
   #sanitation(hash_of_files) #has keys and values
     #that makes years.to_i, data.to_f and ignores if n/a or else or 0, names.upcase
     #Sanitation does csv.open  and sends back @data with cleaned data
-  attr_reader :line,
-              :name,
-              :concentration,
-              :race,
-              :year,
-              :data,
-              :cleaned_files
-
-  def initialize
-    #@cleaned_files = Array.new
-    #@opened_file = open_file
-    #@data = data
-  end
+  # attr_reader :line,
+  #             :name,
+  #             :concentration,
+  #             :race,
+  #             :year,
+  #             :data,
+  #             :cleaned_files
+  #
+  # def initialize
+  #   #@cleaned_files = Array.new
+  #   #@opened_file = open_file
+  #   #@data = data
+  # end
 
   # def self.open_files(original_files) #as a hash value is file
   #   binding.pry
@@ -35,7 +92,7 @@ module Sanitation
   #   @cleaned_file = original_file.tap do |line|
   #     binding.pry
   #     #@line = (
-  #             
+  #
   #
   #     return line
   #   end

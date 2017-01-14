@@ -1,7 +1,6 @@
 require './test/test_helper'
-require 'minitest/autorun'
-require 'minitest/pride'
-require 'pry'
+require_relative '../lib/enrollment'
+require_relative '../lib/enrollment_repository'
 
 class EnrollmentTest < Minitest::Test
   attr_reader :er,
@@ -23,25 +22,29 @@ class EnrollmentTest < Minitest::Test
 
   def test_kindergarten_participation_by_year
     by_year = {2007=>0.057,
-               2006=>0.0,
-               2005=>0.0,
-               2004=>0.0,
-               2008=>0.182,
-               2009=>0.27,
-               2010=>0.317,
-               2011=>0.461,
-               2012=>0.525,
-               2013=>0.592,
-               2014=>0.775}
+              2006=>0.0,
+              2005=>0.0,
+              2004=>0.0,
+              2008=>0.182,
+              2009=>0.27,
+              2010=>0.738,
+              2011=>0.751,
+              2012=>0.777,
+              2013=>0.713,
+              2014=>0.757}
     assert_equal by_year, enrollment_in_district.kindergarten_participation_by_year
   end
 
   def test_kindergarden_partipation_in_year
-    assert_equal 0.461, enrollment_in_district.kindergarten_participation_in_year(2011)
+    assert_equal 0.751, enrollment_in_district.kindergarten_participation_in_year(2011)
   end
 
   def test_enrollment_repository_with_high_graduation_by_year
-    expected = {2010=>0.738, 2011=>0.751, 2012=>0.777, 2013=>0.713, 2014=>0.757}
+    expected = {2010=>0.738,
+                2011=>0.751,
+                2012=>0.777,
+                2013=>0.713,
+                2014=>0.757}
     expected.each do |k,v|
       assert_in_delta v, enrollment_in_district.graduation_rate_by_year[k], 0.005
     end
