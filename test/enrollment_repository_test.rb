@@ -9,7 +9,6 @@ class EnrollmentRepositoryTest < Minitest::Test
       er.load_data({ :enrollment => {
         :kindergarten => "./data/Kindergartners in full-day program.csv",
         :high_school_graduation => "./data/High school graduation rates.csv"}})
-      # er.test_method
       @enrollment_in_district = er.find_by_name("ACADEMY 20")
   end
 

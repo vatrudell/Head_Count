@@ -12,8 +12,7 @@ class EnrollmentRepository
   end
 
   def load_data(input)
-    clean_loaded_data  #(input)
-    choose_destiny(input)
+    clean_up_enrollment_data(input)
   end
 
   def populate_kindergarten_data
@@ -29,16 +28,11 @@ class EnrollmentRepository
   def populate_high_school_data
     if enrollments.keys.include?(@name)
       enrollments[@name].high_school_graduation[@year] = @data
-
     else
-       enrollments[@name] = Enrollment.new({
-         name: @name,
-         high_school_graduation: {@year => @data}})
+      enrollments[@name] = Enrollment.new({
+        name: @name,
+        high_school_graduation: {@year => @data}})
      end
-  end
-
-  def test_method
-    binding.pry
   end
 
   def find_by_name(district_name)
