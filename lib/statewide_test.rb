@@ -2,7 +2,7 @@ class StateWideTest
   attr_accessor :grade_three_proficient,
                 :grade_eight_proficient,
                 :average_proficiency,
-                :proficient_by_grade
+                :proficient_by_grade  #does this need to be instance var.
 
   def initialize(input)
     @name = input[:name]
@@ -11,7 +11,11 @@ class StateWideTest
     @average_proficiency = Hash.new(0)
   end
 
-  def proficient_by_grade(grade)
+# take out every include?
+#no nested ifs
+
+
+  def proficient_by_grade(grade)   #refactor this 
     grades = [3, 8]
     if grades.include?(grade)
       if grade == 3
@@ -20,7 +24,7 @@ class StateWideTest
         @grade_eight_proficient
       end
     else
-      "UnknownDataError"
+      "UnknownDataError"   #make actual erro in its own class
     end
   end
 
@@ -29,7 +33,7 @@ class StateWideTest
     if races.include? race
       @average_proficiency[race]
     else
-      "UnknownDataError"
+      "UnknownDataError"  #make actual erro in its own class
     end
   end
 
@@ -40,7 +44,7 @@ class StateWideTest
     if subjects.include?(subject) && grades.include?(grade) && years.include?(year)
       proficient_by_grade(grade)[year][subject]
     else
-      "UnknownDataError"
+      "UnknownDataError"  #make actual erro in its own class
     end
   end
 
@@ -51,7 +55,7 @@ class StateWideTest
     if subjects.include?(subject) && races.include?(race) && years.include?(year)
       return proficient_by_race_or_ethnicity(race)[year][subject]
     else
-      return "UnknownDataError"
+      return "UnknownDataError"#make actual erro in its own class
     end
   end
 end

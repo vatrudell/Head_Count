@@ -12,7 +12,6 @@ class HeadcountAnalyst
     one = database.enrollment_repository.enrollments[name].kindergarten_participation.values
     two = database.enrollment_repository.enrollments[compare].kindergarten_participation.values
     math(one, two)
-    #average(one,two)
   end
 
   def kindergarten_participation_rate_variation_trend(name, compare)
@@ -28,87 +27,60 @@ class HeadcountAnalyst
       final[year] = total
     end
     final.sort_by {|year, key| year}.to_h
-    # binding.pry
-    # final_hash = {}
-    # final.each do |year, data|
-    #   final_hash[year.sort] = data
-    # end
-    #sorted_final = {}
-    #final.sort_by {|year, data| sorted_final[year]}
-
-      # if data != 0 && against_data[year] != 0
-      #   final[year] = (name_data[year]*1000)/(against_data[year]*1000)
-      # else
-      #   final[year] = "N/A"
-      # end
-    #sort_hash(final)
   end
-
-  # def sort_hash(final)
-  #   #final =
-  #   # final_hash = {}
-  #   # final.each do |year, data|
-  #   #   final_hash[year.sort] = data.round(3)
-  #   # end
-  #   # final_hash
-  # end
 
   def kindergarten_participation_against_high_school_graduation(district)
-    one = database.enrollment_repository.enrollments[district].kindergarten_participation.values
-    two = database.enrollment_repository.enrollments[district].high_school_graduation.values
-    math(one, two)
+    kindergarten = database.enrollment_repository.enrollments[district].kindergarten_participation.values
+    colorado_one = database.enrollment_repository.enrollments["COLORADO"].kindergarten_participation.values
+    graduation = database.enrollment_repository.enrollments[district].high_school_graduation.values
+    colorado_two = database.enrollment_repository.enrollments["COLORADO"].high_school_graduation.values
+    kindergarten_variation = math(kindergarten, colorado_one)
+    graduation_variation = math(graduation, colorado_two)
+    (kindergarten_variation/graduation_variation).round(3)
   end
-  #
-  # def kindergarten_participation_correlates_with_high_school_graduation(comparing_district)
-  #   if comparing_district[:for] == "STATEWIDE"
-  #     state_wide_correlation = []
-  #     districts_to_run = database.districts.keys
-  #     districts_to_run.delete("COLORADO")
-  #     districts_to_run.each do |district|
-  #       kindergarten_average = math(database.districts[district].enrollment.values)
-  #       highschool_average = math(database.districts[district].graduation_data.values)
-  #       state_wide_correlation << ((kindergarten_average*1000)/(highschool_average*1000)).round(3)
-  #       @true_false_correlation = state_wide_correlation.map do |correlation|
-  #         if  correlation > 0.6 && correlation < 1.5
-  #           correlation = true
-  #         else
-  #           false
-  #         end
-  #       end
-  #     end
-  #     correlation_true_count = @true_false_correlation.count do |correlation|
-  #       correlation == true
-  #     end
-  #       if correlation_true_count.to_f >= (@true_false_correlation.count * 0.7)
-  #        true
-  #       else
-  #        false
-  #       end
-  #   elsif comparing_district[:for] != "STATEWIDE" && comparing_district[:for].class == String
-  #     kindergarten_average = math(database.districts[comparing_district[:for]].enrollment.values)
-  #     highschool_average = math(database.districts[comparing_district[:for]].graduation_data.values)
-  #     result = ((kindergarten_average*1000)/(highschool_average*1000)).round(3)
-  #     if  result > 0.6 && result < 1.5
-  #       true
-  #     else
-  #       false
-  #     end
-  #   elsif comparing_district[:across].class == Array #maybe put :across in this logic for refactoring
-  #     district_averages = comparing_district[:across].map do |district|
-  #       kindergarten_average = math(inexput.districts[district].enrollment.values)
-  #       highschool_average = math(database.districts[district].graduation_data.values)
-  #       district_averages = ((kindergarten_average*1000)/(highschool_average*1000)).round(3)
-  #     end
-  #     true_false_count = district_averages.count do |correlation|
-  #       correlation > 0.6 && correlation < 1.5
-  #     end
-  #     if true_false_count > comparing_district[:across].count * 0.7
-  #       true
-  #     else
-  #       false
-  #     end
-  #   end
-  # end
+
+  def kindergarten_participation_correlates_with_high_school_graduation(comparing_district)
+    if comparing_district[:for] == "STATEWIDE"
+      statewide_correlation_setup(comparing_district)
+     elsif comparing_district.values != "STATEWIDE" && comparing_district.values.count == 1
+      single_district_correlation(comparing_district[:for])
+    elsif comparing_district[:across].class == Array
+      multiple_district_correlation(comparing_district)
+    end
+  end
+
+  def check_if_within_ratio(ratios)
+    passing = ratios.count do |ratio|
+      ratio > 0.6 && ratio <1.5
+    end
+      if passing > (ratios.count*0.7)
+        true
+      else
+        false
+      end
+  end
+
+  def statewide_correlation_setup(statewide_districts)
+    districts_to_run = database.enrollment_repository.enrollments.keys
+    districts_to_run.delete("COLORADO")
+    state_wide_correlation = districts_to_run.map do |district|
+      kindergarten_participation_against_high_school_graduation(district)
+    end
+      check_if_within_ratio(state_wide_correlation)
+  end
+
+  def single_district_correlation(district)
+    single_ratio = []
+    single_ratio << kindergarten_participation_against_high_school_graduation(district)
+    check_if_within_ratio(single_ratio)
+  end
+
+  def multiple_district_correlation(districts)
+    districts_correlations = districts[:across].map do |district|
+      kindergarten_participation_against_high_school_graduation(district)
+    end
+    check_if_within_ratio(districts_correlations)
+  end
 
   def math(number_1, number_2)
      total_1 = number_1.reduce(:+)
@@ -116,16 +88,4 @@ class HeadcountAnalyst
      grand_total = (total_1/number_1.length)/(total_2/number_2.length)
      grand_total.round(3)
   end
-
-  # def average(number_1, number_2)
-  #   numbers = [number_1, number_2]
-  #   total_1 = number_1.reduce(:+)
-  #   total_2 = number_2.reduce(:+)
-  #   divide_totals(total_1, total_2, numbers)
-  # end
-  #
-  # def divide_totals(total_1, total_2, numbers = nil)
-  #   grand_total = (total_1/numbers[0].length)/(total_2/numbers[1].length)
-  #   grand_total.round(3)
-  # end
 end

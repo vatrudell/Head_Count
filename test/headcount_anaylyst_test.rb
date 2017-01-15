@@ -3,15 +3,13 @@ require_relative '../lib/headcount_analyst'
 
 class HeadcountAnalystTest < Minitest::Test
   attr_reader :dr,
-              :ha,
-              :enrollment_in_district
+              :ha
   def setup
     @dr = DistrictRepository.new
     dr.load_data({ :enrollment => {
       :kindergarten => "./data/Kindergartners in full-day program.csv",
       :high_school_graduation => "./data/High school graduation rates.csv"}})
     @ha = HeadcountAnalyst.new(dr)
-    #@enrollment_in_district = er.find_by_name("COLORADO")
   end
 
   def test_enrollment_analysis_basics
@@ -22,9 +20,7 @@ class HeadcountAnalystTest < Minitest::Test
     assert_in_delta 0.447, actual_2, 0.005
   end
 
-
   def test_enrollment_analysis_rate_variation_trend
-    #passes
     compare = ha.kindergarten_participation_rate_variation_trend(
           'ACADEMY 20',
           :against => 'COLORADO')
@@ -48,6 +44,12 @@ class HeadcountAnalystTest < Minitest::Test
     assert_equal actual, expected
   end
 
+  def test_derp
+    actual_1 = ha.kindergarten_participation_against_high_school_graduation('MONTROSE COUNTY RE-1J')
+    assert_equal 0.547, actual_1, 0.005  #was #0.387
+    actual_2 = ha.kindergarten_participation_against_high_school_graduation('STEAMBOAT SPRINGS RE-2')
+    assert_equal 0.8, actual_2, 0.005   #was #  #0.565
+  end
 #   def test_participation_and_graduation_coorelate
 #     #passes
 #     expected = ha.kindergarten_participation_correlates_with_high_school_graduation(for: 'ACADEMY 20')

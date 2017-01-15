@@ -29,7 +29,7 @@ class EnrollmentRepository
     if enrollments.keys.include?(@name)
       enrollments[@name].high_school_graduation[@year] = @data
     else
-      enrollments[@name] = Enrollment.new({
+      enrollments[@name] = Enrollment.new({              #refactor for .store
         name: @name,
         high_school_graduation: {@year => @data}})
      end
