@@ -9,14 +9,18 @@ class HeadcountAnalyst
 
   def kindergarten_participation_rate_variation(name, against)
     compare = against.values[0]
-    one = database.enrollment_repository.enrollments[name].kindergarten_participation.values
-    two = database.enrollment_repository.enrollments[compare].kindergarten_participation.values
+    one = database.enrollment_repository.enrollments[name].
+    kindergarten_participation.values
+    two = database.enrollment_repository.enrollments[compare].
+    kindergarten_participation.values
     math(one, two)
   end
 
   def kindergarten_participation_rate_variation_trend(name, compare)
-    name_data = database.enrollment_repository.enrollments[name].kindergarten_participation
-    against_data = database.enrollment_repository.enrollments[compare[:against]].kindergarten_participation
+    name_data = database.enrollment_repository.enrollments[name].
+    kindergarten_participation
+    against_data = database.enrollment_repository.enrollments[compare[
+      :against]].kindergarten_participation
     set_year_to_data_in_new_hash(name_data, against_data)
   end
 
@@ -30,10 +34,14 @@ class HeadcountAnalyst
   end
 
   def kindergarten_participation_against_high_school_graduation(district)
-    kindergarten = database.enrollment_repository.enrollments[district].kindergarten_participation.values
-    colorado_one = database.enrollment_repository.enrollments["COLORADO"].kindergarten_participation.values
-    graduation = database.enrollment_repository.enrollments[district].high_school_graduation.values
-    colorado_two = database.enrollment_repository.enrollments["COLORADO"].high_school_graduation.values
+    kindergarten = database.enrollment_repository.enrollments[district].
+    kindergarten_participation.values
+    colorado_one = database.enrollment_repository.enrollments["COLORADO"].
+    kindergarten_participation.values
+    graduation = database.enrollment_repository.enrollments[district].
+    high_school_graduation.values
+    colorado_two = database.enrollment_repository.enrollments["COLORADO"].
+    high_school_graduation.values
     kindergarten_variation = math(kindergarten, colorado_one)
     graduation_variation = math(graduation, colorado_two)
     (kindergarten_variation/graduation_variation).round(3)
@@ -42,7 +50,8 @@ class HeadcountAnalyst
   def kindergarten_participation_correlates_with_high_school_graduation(comparing_district)
     if comparing_district[:for] == "STATEWIDE"
       statewide_correlation_setup(comparing_district)
-     elsif comparing_district.values != "STATEWIDE" && comparing_district.values.count == 1
+     elsif comparing_district.values != "STATEWIDE" && comparing_district.
+       values.count == 1
       single_district_correlation(comparing_district[:for])
     elsif comparing_district[:across].class == Array
       multiple_district_correlation(comparing_district)
@@ -71,7 +80,8 @@ class HeadcountAnalyst
 
   def single_district_correlation(district)
     single_ratio = []
-    single_ratio << kindergarten_participation_against_high_school_graduation(district)
+    result = kindergarten_participation_against_high_school_graduation(district)
+    single_ratio << result
     check_if_within_ratio(single_ratio)
   end
 

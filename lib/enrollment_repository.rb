@@ -1,4 +1,3 @@
-require 'csv'
 require_relative '../lib/enrollment'
 require_relative '../lib/sanitation'
 require 'pry'

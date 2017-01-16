@@ -17,12 +17,12 @@ class StateWideTestTest < Minitest::Test
       :math => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Math.csv",
       :reading => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Reading.csv",
       :writing => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Writing.csv"}})
-    @district = str.find_by_name("ACADEMY 20")
+    #@district = str.find_by_name("ACADEMY 20")
   end
 
-  def test_statewide_name
-    assert_equal "ACADEMY 20", district.name
-  end
+  # def test_statewide_name
+  #   assert_equal "ACADEMY 20", district.name
+  # end
 
   # def test_statewide_grade_three_proficient
   #

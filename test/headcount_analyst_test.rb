@@ -40,28 +40,22 @@ class HeadcountAnalystTest < Minitest::Test
 
   def test_highschool_participation_against_graduation
     expected = ha.kindergarten_participation_against_high_school_graduation("ACADEMY 20")
-    actual =  0.452
+    assert_equal 0.641, expected
+    actual_1 = ha.kindergarten_participation_against_high_school_graduation('MONTROSE COUNTY RE-1J')
+    assert_equal 0.548, actual_1, 0.005  #was #0.387
+    actual_2 = ha.kindergarten_participation_against_high_school_graduation('STEAMBOAT SPRINGS RE-2')
+    assert_equal 0.801, actual_2, 0.005   #was #  #0.565
+  end
+
+  def test_participation_and_graduation_coorelate
+    expected = ha.kindergarten_participation_correlates_with_high_school_graduation(for: 'ACADEMY 20')
+    actual = true
     assert_equal actual, expected
   end
 
-  def test_derp
-    actual_1 = ha.kindergarten_participation_against_high_school_graduation('MONTROSE COUNTY RE-1J')
-    assert_equal 0.547, actual_1, 0.005  #was #0.387
-    actual_2 = ha.kindergarten_participation_against_high_school_graduation('STEAMBOAT SPRINGS RE-2')
-    assert_equal 0.8, actual_2, 0.005   #was #  #0.565
+  def test_kindergarden_agianst_highschool_for_statewide
+    expected = ha.kindergarten_participation_correlates_with_high_school_graduation(for: 'STATEWIDE')
+    actual = false
+    assert_equal actual, expected
   end
-#   def test_participation_and_graduation_coorelate
-#     #passes
-#     expected = ha.kindergarten_participation_correlates_with_high_school_graduation(for: 'ACADEMY 20')
-#     actual = false
-#     assert_equal actual, expected
-#   end
-#
-#   def test_kindergarden_agianst_highschool_for_statewide
-#     #passes
-#     expected = ha.kindergarten_participation_correlates_with_high_school_graduation(for: 'STATEWIDE')
-#     actual = false
-#     assert_equal actual, expected
-#   end
-# end
 end

@@ -18,7 +18,7 @@ class DistrictRepository
   end
 
   def load_data(input)
-    @enrollment_repository.load_data(input)
+    enrollment_repository.load_data(input)
     clean_up_district_data(input)
   end
 
@@ -27,8 +27,7 @@ class DistrictRepository
       districts[@name].name = @name
     else
       districts[@name] = District.new({
-        name: @name},
-        self)
+        name: @name}, self)
     end
   end
 
@@ -49,13 +48,9 @@ class DistrictRepository
 
   def find_enrollment(name)
     enrollment_repository.find_by_name(name)
-    # enrollment object = er.find_by_name(district_name)
-    #change enrollment repoisitory
   end
 
   def find_statewide_test(name)
     statewide_test_repository.find_by_name(name)
-    # statewidetest object = statewidetest.find_by_name(district_name)
-    #change statewidetest_instance to repoisitory
   end
 end

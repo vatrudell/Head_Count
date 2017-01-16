@@ -1,7 +1,6 @@
 require './test/test_helper'
 require_relative '../lib/district'
-
-
+require_relative '../lib/district_repository'
 
 class DistrictTest < Minitest::Test
   attr_accessor :district,

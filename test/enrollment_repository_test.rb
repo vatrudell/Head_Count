@@ -13,13 +13,7 @@ class EnrollmentRepositoryTest < Minitest::Test
   end
 
   def test_load_data_makes_high_school_graduation_rates
-    expected = {2007=>0.391,
-                2006=>0.353,
-                2005=>0.267,
-                2004=>0.302,
-                2008=>0.384,
-                2009=>0.39,
-                2010=>0.895,
+    expected = {2010=>0.895,
                 2011=>0.895,
                 2012=>0.889,
                 2013=>0.913,
@@ -34,11 +28,11 @@ class EnrollmentRepositoryTest < Minitest::Test
                 2004=>0.302,
                 2008=>0.384,
                 2009=>0.39,
-                2010=>0.895,
-                2011=>0.895,
-                2012=>0.889,
-                2013=>0.913,
-                2014=>0.898}
+                2010=>0.436,
+                2011=>0.489,
+                2012=>0.478,
+                2013=>0.487,
+                2014=>0.49}
     assert_equal expected, enrollment_in_district.kindergarten_participation
   end
 
