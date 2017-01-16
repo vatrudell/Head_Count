@@ -2,101 +2,116 @@ require_relative '../lib/district_repository'
 require 'pry'
 
 class HeadcountAnalyst
-  attr_accessor :input
+  attr_accessor :database
   def initialize(input)
-    @input = input
+    @database = input
   end
 
   def kindergarten_participation_rate_variation(name, against)
     compare = against.values[0]
-    one = math(input.districts[name].enrollment_data.values)
-    two = math(input.districts[compare].graduation_data.values)
-    result = (one*1000)/(two*1000)
-    result.round(3)
+    one = database.enrollment_repository.enrollments[name].kindergarten_participation.values
+    two = database.enrollment_repository.enrollments[compare].kindergarten_participation.values
+    math(one, two)
   end
 
   def kindergarten_participation_rate_variation_trend(name, compare)
-    name_data = input.districts[name].enrollment_data
-    against = compare[:against]
-    against_data = input.districts[against].enrollment_data
-    final = Hash.new(0)
-    name_data.each do |year, data|
-      if data != 0 && against_data[year] != 0
-        final[year] = (name_data[year]*1000)/(against_data[year]*1000)
-      else
-        final[year] = "N/A"
-      end
+    name_data = database.enrollment_repository.enrollments[name].kindergarten_participation
+    against_data = database.enrollment_repository.enrollments[compare[:against]].kindergarten_participation
+    set_year_to_data_in_new_hash(name_data, against_data)
+  end
+
+  def set_year_to_data_in_new_hash(name_data, against_data)
+    final = {}
+    final_hash = name_data.each_pair do |year, data|
+      total = (data/against_data[year]).round(3)
+      final[year] = total
     end
-    final = final.sort_by {|year, data| year}
-    final_hash = {}
-    final.each {|year, data| final_hash[year] = data.to_s[0..4].to_f}
-    final_hash
+    final.sort_by {|year, key| year}.to_h
   end
 
   def kindergarten_participation_against_high_school_graduation(district)
-    one = math(input.districts[district].enrollment_data.values)
-    two = math(input.districts[district].graduation_data.values)
-    result = (one*1000)/(two*1000)
-    result.round(3)
+    kindergarten = database.enrollment_repository.enrollments[district].kindergarten_participation.values
+    colorado_one = database.enrollment_repository.enrollments["COLORADO"].kindergarten_participation.values
+    graduation = database.enrollment_repository.enrollments[district].high_school_graduation.values
+    colorado_two = database.enrollment_repository.enrollments["COLORADO"].high_school_graduation.values
+    kindergarten_variation = math(kindergarten, colorado_one)
+    graduation_variation = math(graduation, colorado_two)
+    (kindergarten_variation/graduation_variation).round(3)
   end
 
   def kindergarten_participation_correlates_with_high_school_graduation(comparing_district)
     if comparing_district[:for] == "STATEWIDE"
-      state_wide_correlation = []
-      districts_to_run = input.districts.keys
-      districts_to_run.delete("COLORADO")
-      districts_to_run.each do |district|
-        kindergarten_average = math(input.districts[district].enrollment_data.values)
-        highschool_average = math(input.districts[district].graduation_data.values)
-        state_wide_correlation << ((kindergarten_average*1000)/(highschool_average*1000)).round(3)
-        @true_false_correlation = state_wide_correlation.map do |correlation|
-          if  correlation > 0.6 && correlation < 1.5
-            correlation = true
-          else
-            false
-          end
-        end
-      end
-      correlation_true_count = @true_false_correlation.count do |correlation|
-        correlation == true
-      end
-        if correlation_true_count.to_f >= (@true_false_correlation.count * 0.7)
-         true
-        else
-         false
-        end
-    elsif comparing_district[:for] != "STATEWIDE" && comparing_district[:for].class == String
-      kindergarten_average = math(input.districts[comparing_district[:for]].enrollment_data.values)
-      highschool_average = math(input.districts[comparing_district[:for]].graduation_data.values)
-      result = ((kindergarten_average*1000)/(highschool_average*1000)).round(3)
-      if  result > 0.6 && result < 1.5
-        true
-      else
-        false
-      end
-    elsif comparing_district[:across].class == Array #maybe put :across in this logic for refactoring
-      district_averages = comparing_district[:across].map do |district|
-        kindergarten_average = math(inexput.districts[district].enrollment_data.values)
-        highschool_average = math(input.districts[district].graduation_data.values)
-        district_averages = ((kindergarten_average*1000)/(highschool_average*1000)).round(3)
-      end
-      true_false_count = district_averages.count do |correlation|
-        correlation > 0.6 && correlation < 1.5
-      end
-      if true_false_count > comparing_district[:across].count * 0.7
-        true
-      else
-        false
-      end
+      statewide_correlation_setup(comparing_district)
+     elsif comparing_district.values != "STATEWIDE" && comparing_district.values.count == 1
+      single_district_correlation(comparing_district[:for])
+    elsif comparing_district[:across].class == Array
+      multiple_district_correlation(comparing_district)
     end
   end
 
-  def math(district_data_values)  #rename to average
-      district_data_values.reduce(:&)/district_data_values.count
-    #
-    # district_data_values.reduce(0) do |sum, number|
-    #
-    #   sum + number
-    # end/district_data_values.count
+  def check_if_within_ratio(ratios)
+    passing = ratios.count do |ratio|
+      ratio > 0.6 && ratio <1.5
+    end
+      if passing > (ratios.count*0.7)
+        true
+      else
+        false
+      end
+  end
+
+  def statewide_correlation_setup(statewide_districts)
+    districts_to_run = database.enrollment_repository.enrollments.keys
+    districts_to_run.delete("COLORADO")
+    state_wide_correlation = districts_to_run.map do |district|
+      kindergarten_participation_against_high_school_graduation(district)
+    end
+      check_if_within_ratio(state_wide_correlation)
+  end
+
+  def single_district_correlation(district)
+    single_ratio = []
+    single_ratio << kindergarten_participation_against_high_school_graduation(district)
+    check_if_within_ratio(single_ratio)
+  end
+
+  def multiple_district_correlation(districts)
+    districts_correlations = districts[:across].map do |district|
+      kindergarten_participation_against_high_school_graduation(district)
+    end
+    check_if_within_ratio(districts_correlations)
+  end
+
+  def math(number_1, number_2)
+     total_1 = number_1.reduce(:+)
+     total_2 = number_2.reduce(:+)
+     grand_total = (total_1/number_1.length)/(total_2/number_2.length)
+     grand_total.round(3)
+  end
+
+  def top_statewide_test_year_over_year_growth(year)
   end
 end
+
+
+
+dr = DistrictRepository.new
+    dr.load_data({:enrollment => {
+                    :kindergarten => "./data/Kindergartners in full-day program.csv",
+                    :high_school_graduation => "./data/High school graduation rates.csv",
+                   },
+                   :statewide_testing => {
+                     :third_grade => "./data/3rd grade students scoring proficient or above on the CSAP_TCAP.csv",
+                     :eighth_grade => "./data/8th grade students scoring proficient or above on the CSAP_TCAP.csv",
+                     :math => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Math.csv",
+                     :reading => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Reading.csv",
+                     :writing => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Writing.csv"
+                   }
+                 })
+    ha = HeadcountAnalyst.new(dr)
+    ha.kindergarten_participation_against_high_school_graduation("COLORADO")
+    ha.kindergarten_participation_correlates_with_high_school_graduation(:for =>'STATEWIDE')
+    ha.kindergarten_participation_correlates_with_high_school_graduation(for: 'ACADEMY 20')
+    #ha.kindergarten_participation_correlates_with_high_school_graduation(for: 'MONTROSE COUNTY RE-1J')
+    #ha.kindergarten_participation_correlates_with_high_school_graduation(:across => ["ACADEMY 20", 'PARK (ESTES PARK) R-3', 'YUMA SCHOOL DISTRICT 1'])
+
