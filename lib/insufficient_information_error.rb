@@ -1,0 +1,2 @@
+class InsufficientInformationError < StandardError
+end

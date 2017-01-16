@@ -1,4 +1,3 @@
-#require 'csv'
 require 'pry'
 require_relative '../lib/district'
 require_relative '../lib/enrollment_repository'
@@ -16,12 +15,13 @@ class DistrictRepository
     @districts = {}
     @enrollment_repository = EnrollmentRepository.new
     @statewide_test_repository = StatewideTestRepository.new
+    # @economic_repository = EconomicProfileRepository.new
   end
 
   def load_data(input)
-    @enrollment_repository.load_data(input)
     clean_up_district_data(input)
-   
+    @enrollment_repository.load_data(input)
+    @statewide_test_repository.load_data(input)
   end
 
   def populate_district_data
@@ -33,8 +33,6 @@ class DistrictRepository
         self)
     end
   end
-     
-
 
   def find_by_name(district_name)
     if districts.include?(district_name)
@@ -49,7 +47,6 @@ class DistrictRepository
       district[0].include?(input)
     end
     matches
-     
   end
 
   def find_enrollment(name)
@@ -64,8 +61,24 @@ class DistrictRepository
     #change statewidetest_instance to repoisitory
   end
 
-  def test_shit
+
+  def test_method
     binding.pry
   end
+
 end
 
+dr = DistrictRepository.new
+    dr.load_data({:enrollment => {
+                    :kindergarten => "./data/Kindergartners in full-day program.csv",
+                    :high_school_graduation => "./data/High school graduation rates.csv",
+                   },
+                   :statewide_testing => {
+                     :third_grade => "./data/3rd grade students scoring proficient or above on the CSAP_TCAP.csv",
+                     :eighth_grade => "./data/8th grade students scoring proficient or above on the CSAP_TCAP.csv",
+                     :math => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Math.csv",
+                     :reading => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Reading.csv",
+                     :writing => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Writing.csv"
+                   }
+                 })
+  dr.test_method
