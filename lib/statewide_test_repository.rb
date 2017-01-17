@@ -95,8 +95,4 @@ class StateWideTestRepository
   def find_by_name(district)
     statewide_information[district]
   end
-
-  def test_shit
-    binding.pry
-  end
 end

@@ -32,11 +32,17 @@ class EnrollmentTest < Minitest::Test
               2012=>0.525,
               2013=>0.592,
               2014=>0.775}
-    assert_equal by_year, enrollment_in_district.kindergarten_participation_by_year
+    by_year.each do |year, data|
+      assert_in_delta data, enrollment_in_district.kindergarten_participation_by_year[year], 0.005
+    end
   end
 
   def test_kindergarden_partipation_in_year
-    assert_equal 0.461, enrollment_in_district.kindergarten_participation_in_year(2011)
+    assert_in_delta 0.461, enrollment_in_district.kindergarten_participation_in_year(2011), 0.005
+  end
+
+  def test_enrollment_repository_high_school_graduation_in_year
+    assert_in_delta 0.738, enrollment_in_district.graduation_rate_in_year(2010), 0.005
   end
 
   def test_enrollment_repository_with_high_graduation_by_year
@@ -45,12 +51,9 @@ class EnrollmentTest < Minitest::Test
                 2012=>0.777,
                 2013=>0.713,
                 2014=>0.757}
-    expected.each do |k,v|
-      assert_in_delta v, enrollment_in_district.graduation_rate_by_year[k], 0.005
+    expected.each do |year, data|
+      assert_in_delta data, enrollment_in_district.graduation_rate_by_year[year], 0.005
     end
   end
 
-  def test_enrollment_repository_high_school_graduation_in_year
-    assert_in_delta 0.738, enrollment_in_district.graduation_rate_in_year(2010), 0.005
-  end
 end

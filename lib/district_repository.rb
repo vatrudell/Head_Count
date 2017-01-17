@@ -41,9 +41,10 @@ class DistrictRepository
     if districts.include?(district_name)
       districts[district_name]
     else
-      "You entered a district name that doens't exists!"
+      "You entered a district name that doens't exists!"   #put in raise args error
     end
   end
+  # and if name is invalid
 
   def find_all_matching(input)
     matches = districts.find_all do |district|
@@ -52,11 +53,18 @@ class DistrictRepository
     matches
   end
 
+  #error for mathches is 0  input is invalid
+
   def find_enrollment(name)
     enrollment_repository.find_by_name(name)
   end
 
+  #error for invalid input
+
   def find_statewide_test(name)
     statewide_test_repository.find_by_name(name)
   end
+
+  #error for invalid input
+
 end
