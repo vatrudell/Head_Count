@@ -8,12 +8,14 @@ class District
   end
 
   def enrollment
-      d_repo.find_enrollment(name)
+    d_repo.find_enrollment(name)
   end
 
   def statewide_test
     d_repo.find_statewide_test(name)
   end
 
-  
+  def economic_repository
+    d_repo.find_economic(name)
+  end
 end

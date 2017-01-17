@@ -52,13 +52,14 @@ module Sanitation
     statewide_concentration_cleaner(line[:score])
     statewide_data_cleaner(line[:data])
     statewide_race_renaming(line[:race_ethnicity])
-    choose_statewide_destiny(name, file)
+      choose_statewide_destiny(name, file)
   end
 
-
   def statewide_data_cleaner(line_data)
-    if line_data.nil?
-      @district_data =  "N/A"
+    if line_data == "N/A"
+      @district_data = 0
+    elsif line_data.nil?
+      @district_data =  0
     else
       @district_data =  (line_data[0..4].to_f)
     end
@@ -127,5 +128,4 @@ module Sanitation
     populate_free_or_reduced_price_lunch(file) if file.include?("free")
     populate_title_i(file) if file.include?("Title")
   end
-
 end

@@ -67,17 +67,17 @@ end
 
 
 
-    ep = EconomicProfile.new({:median_household_income => {[2014, 2015] => 50000, [2013, 2014] => 60000},
-            :children_in_poverty => {2012 => 0.1845},
-            :free_or_reduced_price_lunch => {2014 => {:percentage => 0.023, :total => 100}},
-            :title_i => {2015 => 0.543},
-           })
-   ep.median_household_income_in_year(2015)
-   ep.median_household_income_average
-   ep.children_in_poverty_in_year(2012)
-   ep.free_or_reduced_price_lunch_percentage_in_year(2014)
-   ep.free_or_reduced_price_lunch_number_in_year(2014)
-   ep.title_i_in_year(2015)
+  #   ep = EconomicProfile.new({:median_household_income => {[2014, 2015] => 50000, [2013, 2014] => 60000},
+  #           :children_in_poverty => {2012 => 0.1845},
+  #           :free_or_reduced_price_lunch => {2014 => {:percentage => 0.023, :total => 100}},
+  #           :title_i => {2015 => 0.543},
+  #          })
+  #  ep.median_household_income_in_year(2015)
+  #  ep.median_household_income_average
+  #  ep.children_in_poverty_in_year(2012)
+  #  ep.free_or_reduced_price_lunch_percentage_in_year(2014)
+  #  ep.free_or_reduced_price_lunch_number_in_year(2014)
+  #  ep.title_i_in_year(2015)
 
 
 

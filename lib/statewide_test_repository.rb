@@ -80,10 +80,6 @@ class StatewideTestRepository
   def find_by_name(district)
     @statewide_information[district]
   end
-
-  def test_repo
-    binding.pry
-  end
 end
 
 #  str = StatewideTestRepository.new
@@ -97,4 +93,3 @@ end
 #                     }
 #                   })
 #     str.find_by_name('ACADEMY 20')
-#     str.test_repo
