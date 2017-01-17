@@ -2,26 +2,32 @@ require 'pry'
 require_relative '../lib/district'
 require_relative '../lib/enrollment_repository'
 require_relative '../lib/statewide_test_repository'
+require_relative '../lib/economic_profile_repository'
 require_relative '../lib/sanitation'
+
 
 class DistrictRepository
   include Sanitation
   attr_accessor :district_repository,
                 :enrollment_repository,
                 :statewide_test_repository,
-                :districts
+                :districts,
+                :economic_repository
 
   def initialize
     @districts = {}
     @enrollment_repository = EnrollmentRepository.new
-    @statewide_test_repository = StatewideTestRepository.new
+    @statewide_test_repository = StateWideTestRepository.new
+    @economic_repository = EconomicProfileRepository.new
+
   end
 
   def load_data(input)
-    enrollment_repository.load_data(input)
     clean_up_district_data(input)
+    enrollment_repository.load_data(input)
+    statewide_test_repository.load_data(input)
   end
-
+#@name = name?
   def populate_district_data
     if districts.keys.include?(@name)
       districts[@name].name = @name

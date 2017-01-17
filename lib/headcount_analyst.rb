@@ -47,14 +47,16 @@ class HeadcountAnalyst
     (kindergarten_variation/graduation_variation).round(3)
   end
 
-  def kindergarten_participation_correlates_with_high_school_graduation(comparing_district)
-    if comparing_district[:for] == "STATEWIDE"
-      statewide_correlation_setup(comparing_district)
-     elsif comparing_district.values != "STATEWIDE" && comparing_district.
+
+#make smaller line 52
+  def kindergarten_participation_correlates_with_high_school_graduation(compare)
+    if compare[:for] == "STATEWIDE"
+      statewide_correlation_setup(compare)
+    elsif compare.values != "STATEWIDE" && compare.
        values.count == 1
-      single_district_correlation(comparing_district[:for])
-    elsif comparing_district[:across].class == Array
-      multiple_district_correlation(comparing_district)
+      single_district_correlation(compare[:for])
+    elsif compare[:across].class == Array
+      multiple_district_correlation(compare)
     end
   end
 
@@ -97,5 +99,8 @@ class HeadcountAnalyst
      total_2 = number_2.reduce(:+)
      grand_total = (total_1/number_1.length)/(total_2/number_2.length)
      grand_total.round(3)
+  end
+
+  def top_statewide_test_year_over_year_growth(year)
   end
 end

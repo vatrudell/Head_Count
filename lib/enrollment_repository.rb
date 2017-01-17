@@ -13,7 +13,7 @@ class EnrollmentRepository
   def load_data(input)
     clean_up_enrollment_data(input)
   end
-
+#@name = name, also do year and data
   def populate_kindergarten_data
     if enrollments.keys.include?(@name)
      enrollments[@name].kindergarten_participation[@year] = @data
@@ -28,8 +28,7 @@ class EnrollmentRepository
     if enrollments.keys.include?(@name)
       enrollments[@name].high_school_graduation[@year] = @data
     else
-      enrollments[@name] = Enrollment.new({              #refactor for .store
-        name: @name,
+      enrollments[@name] = Enrollment.new({ name: @name,
         high_school_graduation: {@year => @data}})
      end
   end

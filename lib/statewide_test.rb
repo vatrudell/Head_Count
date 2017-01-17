@@ -1,14 +1,17 @@
+require_relative '../lib/unknown_data_error'
+
 class StateWideTest
   attr_accessor :grade_three_proficient,
                 :grade_eight_proficient,
                 :average_proficiency,
-                :proficient_by_grade  #does this need to be instance var.
+                :proficient_by_grade,
+                :name
 
   def initialize(input)
     @name = input[:name]
     @grade_three_proficient = input[:grade_three_proficient]
     @grade_eight_proficient = Hash.new(0) #input[:eighth_grade]  #Hash.new(0)
-    @average_proficiency = input[:average_proficiency]     #Hash.new(0)
+    @average_proficiency = Hash.new(0)
   end
 
 # take out every include?
@@ -22,7 +25,7 @@ class StateWideTest
         grade_eight_proficient
       end
     else
-      "UnknownDataError"
+      raise UnknownDataError
     end
   end
 
@@ -32,7 +35,7 @@ class StateWideTest
     if races.include? race
       average_proficiency[race]
     else
-      "UnknownDataError"
+      #raise Alert::UnknownDataError
     end
   end
 
@@ -44,7 +47,7 @@ class StateWideTest
       include?(year)
       proficient_by_grade(grade)[year][subject]
     else
-      "UnknownDataError"  #make actual erro in its own class
+      # raise Alert::UnknownDataError
     end
   end
 
@@ -57,7 +60,7 @@ class StateWideTest
     years.include?(year)
       return proficient_by_race_or_ethnicity(race)[year][subject]
     else
-      return "UnknownDataError"
+      # raise UnknownDataError
     end
   end
 end

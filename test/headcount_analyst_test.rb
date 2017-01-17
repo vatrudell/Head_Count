@@ -1,14 +1,29 @@
 require './test/test_helper'
 require_relative '../lib/headcount_analyst'
+require_relative '../lib/economic_profile_repository'
 
 class HeadcountAnalystTest < Minitest::Test
   attr_reader :dr,
+              :er,
               :ha
   def setup
     @dr = DistrictRepository.new
-    dr.load_data({ :enrollment => {
+    @econ = EconomicProfileRepository.new
+    dr.load_data({:enrollment => {
       :kindergarten => "./data/Kindergartners in full-day program.csv",
-      :high_school_graduation => "./data/High school graduation rates.csv"}})
+      :high_school_graduation => "./data/High school graduation rates.csv"},
+                 :statewide_testing => {
+      :third_grade =>
+  "./data/3rd grade students scoring proficient or above on the CSAP_TCAP.csv",
+      :eighth_grade =>
+  "./data/8th grade students scoring proficient or above on the CSAP_TCAP.csv",
+      :math =>
+  "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Math.csv",
+      :reading =>
+  "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Reading.csv",
+      :writing =>
+  "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Writing.csv"
+  }})
     @ha = HeadcountAnalyst.new(dr)
   end
 
@@ -59,3 +74,24 @@ class HeadcountAnalystTest < Minitest::Test
     assert_equal actual, expected
   end
 end
+
+
+# dr = DistrictRepository.new
+#     dr.load_data({:enrollment => {
+#                     :kindergarten => "./data/Kindergartners in full-day program.csv",
+#                     :high_school_graduation => "./data/High school graduation rates.csv",
+#                    },
+#                    :statewide_testing => {
+#                      :third_grade => "./data/3rd grade students scoring proficient or above on the CSAP_TCAP.csv",
+#                      :eighth_grade => "./data/8th grade students scoring proficient or above on the CSAP_TCAP.csv",
+#                      :math => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Math.csv",
+#                      :reading => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Reading.csv",
+#                      :writing => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Writing.csv"
+#                    }
+#                  })
+#     ha = HeadcountAnalyst.new(dr)
+#     ha.kindergarten_participation_against_high_school_graduation("COLORADO")
+#     ha.kindergarten_participation_correlates_with_high_school_graduation(:for =>'STATEWIDE')
+#     ha.kindergarten_participation_correlates_with_high_school_graduation(for: 'ACADEMY 20')
+#     #ha.kindergarten_participation_correlates_with_high_school_graduation(for: 'MONTROSE COUNTY RE-1J')
+#     #ha.kindergarten_participation_correlates_with_high_school_graduation(:across => ["ACADEMY 20", 'PARK (ESTES PARK) R-3', 'YUMA SCHOOL DISTRICT 1'])
