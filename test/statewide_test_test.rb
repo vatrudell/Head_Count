@@ -1,7 +1,6 @@
 require './test/test_helper'
 require_relative '../lib/statewide_test_repository'
 
-
 class StateWideTestTest < Minitest::Test
   attr_reader :stwr,
               :statewide_object,
@@ -29,10 +28,6 @@ class StateWideTestTest < Minitest::Test
   def test_statewide_class
     assert_equal StateWideTest, statewide_object.class
   end
-
-  # by_year.each do |year, data|
-  #   assert_in_delta data, enrollment_in_district.kindergarten_participation_by_year[year], 0.005
-  # end
 
   def test_statewide_grade_three_proficient
     expected = {2008=>{:math=>0.857, :reading=>0.866, :writing=>0.671},
@@ -112,7 +107,6 @@ class StateWideTestTest < Minitest::Test
     2014=>{:math=>0.834, :reading=>0.831, :writing=>0.639}}
     assert_equal expected, actual
   end
-  #need a test for when grad isn't there
 
   def test_proficient_by_race_or_ethnicity
     actual = statewide_object.proficient_by_race_or_ethnicity(:asian)
@@ -123,7 +117,6 @@ class StateWideTestTest < Minitest::Test
      2014=>{:math=>0.8, :reading=>0.855, :writing=>0.789}}
     assert_equal expected, actual
   end
-  # " when input is incorrect
 
   def test_proficient_for_subject_by_race_in_year
     actual = statewide_object.proficient_for_subject_by_race_in_year(:math, :asian, 2011)
@@ -131,16 +124,9 @@ class StateWideTestTest < Minitest::Test
     assert_equal expected, actual
   end
 
-  #" for when race isn't there
-  # " when input is incorrect
-
   def test_proficient_for_subject_by_grade_in_year
     actual = statewide_object.proficient_for_subject_by_grade_in_year(:math, 3, 2011)
     expected =  0.819
     assert_equal expected, actual
   end
-    #need a test for when year isn't there
-    #" for when math isn't there
-    #" for when race isn't there
-    #" when input entered is incorrect"
 end
