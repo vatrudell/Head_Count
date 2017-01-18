@@ -10,11 +10,10 @@ class StateWideTest
   def initialize(input)
     @name = input[:name]
     @grade_three_proficient = input[:grade_three_proficient]
-    @grade_eight_proficient = Hash.new(0) #input[:eighth_grade]  #Hash.new(0)
+    @grade_eight_proficient = Hash.new(0)
     @average_proficiency = Hash.new(0)
   end
 
-# take out every include?
 
   def proficient_by_grade(grade)   #refactor this
     grades = [3, 8]
@@ -25,7 +24,7 @@ class StateWideTest
         grade_eight_proficient
       end
     else
-      raise UnknownDataError
+      puts "UnkownDataError"
     end
   end
 
@@ -35,7 +34,7 @@ class StateWideTest
     if races.include? race
       average_proficiency[race]
     else
-      #raise Alert::UnknownDataError
+      puts "UnknownDataError"
     end
   end
 
@@ -47,7 +46,7 @@ class StateWideTest
       include?(year)
       proficient_by_grade(grade)[year][subject]
     else
-      # raise Alert::UnknownDataError
+      puts "UnknownDataError"
     end
   end
 
@@ -60,7 +59,7 @@ class StateWideTest
     years.include?(year)
       return proficient_by_race_or_ethnicity(race)[year][subject]
     else
-      # raise UnknownDataError
+      puts "UnknownDataError"
     end
   end
 end
