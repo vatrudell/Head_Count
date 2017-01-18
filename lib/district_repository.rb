@@ -29,7 +29,7 @@ class DistrictRepository
     @statewide_test_repository.load_data(input) if input.include?(:statewide_testing)
     @economic_repository.load_data(input) if input.include?(:economic_profile)
   end
-#@name = name?
+
   def populate_district_data
     if districts.keys.include?(@name)
       districts[@name].name = @name
