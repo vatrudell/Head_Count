@@ -8,9 +8,8 @@ require_relative '../lib/statewide_test_repository'
    include Sanitation
    attr_reader :file,
                :dr
-              #:sanitize,
+  
    def setup
-    # @sanitize = Sanitation.new
     @dr = DistrictRepository.new
     @er = EnrollmentRepository.new
     @swt_repo = StatewideTestRepository.new
