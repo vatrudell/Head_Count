@@ -101,10 +101,11 @@ class HeadcountAnalyst
   end
 
   def top_statewide_test_year_over_year_growth(parameters)
-    # binding.pry
-    # raise(UnknownDataError) if ![3, 8].include?(settings[:grade])
-    # raise(InsufficientInformationError) if settings[:grade].nil?
-    if parameters[:grade] == 3 && parameters[:weighting].nil? && parameters[:subject] != nil
+    if ![3, 8].include?(parameters[:grade])
+      puts "UnkownDataError"
+    elsif parameters[:grade].nil?
+      puts "InsufficientInformationError"
+    elsif parameters[:grade] == 3 && parameters[:weighting].nil? && parameters[:subject] != nil
       top_growth_grade_three(parameters)
     elsif parameters[:grade] == 8 && parameters[:weighting].nil? && parameters[:subject] != nil
       top_growth_grade_eight(parameters)
