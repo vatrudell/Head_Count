@@ -58,9 +58,5 @@ class EconomicProfile
 
   def year_included(data, year)
     true if data.keys.include?(year)
-
-    # else
-    #   raise UnknownDataError
-    # end
   end
 end
