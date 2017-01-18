@@ -15,7 +15,7 @@ class StateWideTest
   end
 
 
-  def proficient_by_grade(grade)   #refactor this
+  def proficient_by_grade(grade)
     grades = [3, 8]
     if grades.include?(grade)
       if grade == 3
