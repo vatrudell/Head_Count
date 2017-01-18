@@ -35,9 +35,7 @@ class HeadcountAnalyst
     colorado_one = database.enrollment_repository.enrollments["COLORADO"].kindergarten_participation.values
     graduation = database.enrollment_repository.enrollments[district].high_school_graduation.values
     colorado_two = database.enrollment_repository.enrollments["COLORADO"].high_school_graduation.values
-    kindergarten_variation = math(kindergarten, colorado_one)
-    graduation_variation = math(graduation, colorado_two)
-    (kindergarten_variation/graduation_variation).round(3)
+    ((math(kindergarten, colorado_one))/(math(graduation, colorado_two))).round(3)
   end
 
   def kindergarten_participation_correlates_with_high_school_graduation(comparing_district)
@@ -90,19 +88,13 @@ class HeadcountAnalyst
      grand_total.round(3)
   end
 
-
-    
-
-
-
-
   def top_statewide_test_year_over_year_growth(parameters)
     # binding.pry
     # raise(UnknownDataError) if ![3, 8].include?(settings[:grade])
     # raise(InsufficientInformationError) if settings[:grade].nil?
-    if parameters[:grade] == 3 && parameters[:weighting].nil?
+    if parameters[:grade] == 3 && parameters[:weighting].nil? && parameters[:subject] != nil
       top_growth_grade_three(parameters)
-    elsif parameters[:grade] == 8 && parameters[:weighting].nil?
+    elsif parameters[:grade] == 8 && parameters[:weighting].nil? && parameters[:subject] != nil
       top_growth_grade_eight(parameters)
     elsif parameters[:subject].nil? && parameters[:grade] == 8
       all_district_averages_grade_eight(parameters)
@@ -111,36 +103,38 @@ class HeadcountAnalyst
     end
   end
 
-    
-    
   def top_growth_grade_eight(parameters)
     subject = parameters[:subject]
     @growths= Hash.new(0)
     @database.statewide_test_repository.statewide_information.keys.each do |district|
       find_all_years_grade_eight(subject, district)
       find_data_grade_eight(subject, district)
-        if @first_year.nil? || (@last_year == @first_year)
-          growths[district] = 0
-        else
-          average_growth = ((@data_two - @data_one)/(@last_year - @first_year)).round(3)
-          growths[district] = average_growth
-        end
-    end 
-      top_growths = growths.sort_by do |district, growths|
-        growths
-      end
-      if parameters[:top].nil?
-        top_growths.last
-        # binding.pry
-      else
-        top_growths.reverse[0..(parameters[:top]-1)]
-      # binding.pry   
-      end
+      set_growths(district)
+    end
+    sort_growths(parameters)
+  end
+  
+  def set_growths(district)
+    if @first_year.nil? || (@last_year == @first_year)
+      growths[district] = 0
+    else
+      average_growth = ((@data_two - @data_one)/(@last_year - @first_year)).round(3)
+      growths[district] = average_growth
+    end
+  end 
+
+  def sort_growths(parameters)
+    top_growths = growths.sort_by do |district, growths|
+      growths
+    end
+    if parameters[:top].nil?
+      top_growths.last
+    else
+      top_growths.reverse[0..(parameters[:top]-1)]  
+    end
   end
 
-
   def find_all_years_grade_eight(subject, district)
-    # binding.pry
     years = @database.statewide_test_repository.statewide_information[district].grade_eight_proficient.keys
     correct_years = years.find_all do |year|
       @database.statewide_test_repository.statewide_information[district].grade_eight_proficient[year].keys.include?(subject) && (@database.statewide_test_repository.statewide_information[district].grade_eight_proficient[year][subject] < 1 && @database.statewide_test_repository.statewide_information[district].grade_eight_proficient[year][subject] > 0)
@@ -151,58 +145,42 @@ class HeadcountAnalyst
 
   def find_data_grade_eight(subject, district)
     unless @first_year.nil? || (@last_year == @first_year)
-    @data_one = @database.statewide_test_repository.statewide_information[district].grade_eight_proficient[@first_year][subject]
-    @data_two = @database.statewide_test_repository.statewide_information[district].grade_eight_proficient[@last_year][subject]
+      @data_one = @database.statewide_test_repository.statewide_information[district].grade_eight_proficient[@first_year][subject]
+      @data_two = @database.statewide_test_repository.statewide_information[district].grade_eight_proficient[@last_year][subject]
     end
   end
 
   def top_growth_grade_three(parameters)
-      subject = parameters[:subject]
-      @growths= Hash.new(0)
-      @database.statewide_test_repository.statewide_information.keys.each do |district|
-        find_all_years_grade_three(subject, district)
-        find_data_grade_three(subject, district)
-          if @first_year.nil? || (@last_year == @first_year)
-            growths[district] = 0
-          else
-            average_growth = ((@data_two - @data_one)/(@last_year - @first_year)).round(3)
-            growths[district] = average_growth
-          end
-      end 
-        top_growths = growths.sort_by do |district, growths|
-        growths
-      end
-      if parameters[:top].nil?
-        top_growths.last
-        # binding.pry
-      else
-        top_growths.reverse[0..(parameters[:top]-1)]
-      # binding.pry   
-      end 
+    subject = parameters[:subject]
+    @growths= Hash.new(0)
+    @database.statewide_test_repository.statewide_information.keys.each do |district|
+      find_all_years_grade_three(subject, district)
+      find_data_grade_three(subject, district)
+      set_growths(district)
     end
+    sort_growths(parameters)
+  end
 
-
-    def find_all_years_grade_three(subject, district)
-      # binding.pry
-      years = @database.statewide_test_repository.statewide_information[district].grade_three_proficient.keys
-      correct_years = years.find_all do |year|
-        @database.statewide_test_repository.statewide_information[district].grade_three_proficient[year].keys.include?(subject) &&
-        (@database.statewide_test_repository.statewide_information[district].grade_three_proficient[year][subject] < 1 &&
-         @database.statewide_test_repository.statewide_information[district].grade_three_proficient[year][subject] > 0)
-      end
-      @first_year = correct_years.first
-      @last_year = correct_years.last
+  def find_all_years_grade_three(subject, district)
+    years = @database.statewide_test_repository.statewide_information[district].grade_three_proficient.keys
+    correct_years = years.find_all do |year|
+      @database.statewide_test_repository.statewide_information[district].grade_three_proficient[year].keys.include?(subject) &&
+      (@database.statewide_test_repository.statewide_information[district].grade_three_proficient[year][subject] < 1 &&
+      @database.statewide_test_repository.statewide_information[district].grade_three_proficient[year][subject] > 0)
     end
+    @first_year = correct_years.first
+    @last_year = correct_years.last
+  end
 
-    def find_data_grade_three(subject, district)
-      unless @first_year.nil? || (@last_year == @first_year)
+  def find_data_grade_three(subject, district)
+    unless @first_year.nil? || (@last_year == @first_year)
       @data_one = @database.statewide_test_repository.statewide_information[district].grade_three_proficient[@first_year][subject]
       @data_two = @database.statewide_test_repository.statewide_information[district].grade_three_proficient[@last_year][subject]
-      end
     end
-
+  end
 
   def all_district_averages_grade_eight(parameters)
+    
     top_growth_grade_eight(grade: 8, subject: :math)
     math = @growths
     top_growth_grade_eight(grade: 8, subject: :reading)
@@ -211,26 +189,6 @@ class HeadcountAnalyst
     writing = @growths
     calculation_brain(math, reading, writing, parameters)
   end
-
-  #   if parameters[:weighting].nil?
-  #     all_district_averages_all = Hash.new
-  #     districts = all_district_averages_writing.keys
-  #       districts.each do |district|
-  #         all_district_averages_all[district] = ((all_district_averages_writing[district] + all_district_averages_reading[district] + all_district_averages_math[district])/3).round(3)
-  #       end
-  #   else
-  #     math_weight = parameters[:weighting][:math]
-  #     reading_weight = parameters[:weighting][:reading]
-  #     writing_weight = parameters[:weighting][:writing]
-  #     all_district_averages_all = Hash.new
-  #     districts = all_district_averages_writing.keys
-  #       districts.each do |district|
-  #         all_district_averages_all[district] = ((all_district_averages_writing[district] * writing_weight) + (all_district_averages_reading[district] * reading_weight) + (all_district_averages_math[district] * math_weight)).round(3)
-  #       end
-  #   end
-  #     final = all_district_averages_all.sort_by {|district, growth| growth}
-  #     puts final.reverse[0]
-  # end
 
   def all_district_averages_grade_three(parameters)
     top_growth_grade_three(grade: 3, subject: :math)
@@ -273,15 +231,8 @@ class HeadcountAnalyst
   
   def district_sorting(averages)
     final = averages.sort_by {|district, growth| growth}
-      puts final.reverse[0]
+      final.reverse[0]
   end
-
-  def test_methods
-    binding.pry
-  end
-
-
-
 end
 
 
@@ -307,8 +258,9 @@ dr = DistrictRepository.new
     # top_statewide_test_year_over_year_growth(2000)
     # ha.top_statewide_test_year_over_year_growth(grade: 3, subject: :math, top: 3)
     # ha.all_district_averages_grade_three
-    ha.top_statewide_test_year_over_year_growth(grade: 3, :weighting => {:math => 0.5, :reading => 0.5, :writing => 0.0})
+    # ha.top_statewide_test_year_over_year_growth(grade: 8, :weighting => {:math => 0.5, :reading => 0.5, :writing => 0.0})
     # ha.test_methods
+     ha.top_statewide_test_year_over_year_growth(grade: 3)
     #ha.kindergarten_participation_correlates_with_high_school_graduation(for: 'MONTROSE COUNTY RE-1J')
     #ha.kindergarten_participation_correlates_with_high_school_graduation(:across => ["ACADEMY 20", 'PARK (ESTES PARK) R-3', 'YUMA SCHOOL DISTRICT 1'])
 
