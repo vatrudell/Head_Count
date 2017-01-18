@@ -2,9 +2,9 @@ class District
   attr_accessor :name,
                 :district_repo
 
-  def initialize(name, d_repo = false)
+  def initialize(name, district_repo = false)
     @name =  name
-    @district_repo = d_repo
+    @district_repo = district_repo
   end
 
   def enrollment
@@ -13,5 +13,9 @@ class District
 
   def statewide_test
     district_repo.find_statewide_test(name)
+  end
+  
+  def economic_repository
+    district_repo.find_economic(name)
   end
 end

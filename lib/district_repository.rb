@@ -4,6 +4,7 @@ require_relative '../lib/enrollment_repository'
 require_relative '../lib/statewide_test_repository'
 require_relative '../lib/economic_profile_repository'
 require_relative '../lib/sanitation'
+require_relative '../lib/economic_profile_repository'
 
 
 class DistrictRepository
@@ -11,21 +12,22 @@ class DistrictRepository
   attr_accessor :district_repository,
                 :enrollment_repository,
                 :statewide_test_repository,
-                :districts,
-                :economic_repository
+                :economic_repository,
+                :districts
 
   def initialize
     @districts = {}
     @enrollment_repository = EnrollmentRepository.new
-    @statewide_test_repository = StateWideTestRepository.new
+    @statewide_test_repository = StatewideTestRepository.new
     @economic_repository = EconomicProfileRepository.new
 
   end
 
   def load_data(input)
     clean_up_district_data(input)
-    enrollment_repository.load_data(input)
-    statewide_test_repository.load_data(input)
+    @enrollment_repository.load_data(input) if input.include?(:enrollment)
+    @statewide_test_repository.load_data(input) if input.include?(:statewide_testing)
+    @economic_repository.load_data(input) if input.include?(:economic_profile)
   end
 #@name = name?
   def populate_district_data
@@ -64,7 +66,9 @@ class DistrictRepository
   def find_statewide_test(name)
     statewide_test_repository.find_by_name(name)
   end
-
+  
   #error for invalid input
-
+  def find_economic(name)
+    economic_repository.find_by_name(name)
+  end
 end

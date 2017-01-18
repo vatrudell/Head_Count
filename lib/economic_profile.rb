@@ -2,7 +2,6 @@ require 'pry'
 require_relative "../lib/unknown_data_error"
 
 class EconomicProfile
-  # include Alert
   attr_reader :median_household_income,
               :children_in_poverty,
               :free_or_reduced_price_lunch,

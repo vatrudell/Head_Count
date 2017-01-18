@@ -63,9 +63,20 @@ module Sanitation
     end
   end
 
+  def statewide_csv_brain(line, name, file)
+    @district_name = line[:location].upcase
+    @year = line[:timeframe].to_i
+    statewide_concentration_cleaner(line[:score])
+    statewide_data_cleaner(line[:data])
+    statewide_race_renaming(line[:race_ethnicity])
+      choose_statewide_destiny(name, file)
+  end
+  
   def statewide_data_cleaner(line_data)
-    if line_data.nil?
-      @district_data =  "N/A"
+    if line_data == "N/A"
+      @district_data = 0
+    elsif line_data.nil?
+      @district_data =  0
     else
       @district_data =  (line_data[0..4].to_f)
     end
@@ -125,5 +136,12 @@ module Sanitation
     else
       @year = line_timeframe.to_i
     end
+  end
+
+  def choose_economic_destiny(file)
+    populate_median_household_income(file) if file.include?("Median")
+    populate_children_in_poverty(file) if file.include?("School")
+    populate_free_or_reduced_price_lunch(file) if file.include?("free")
+    populate_title_i(file) if file.include?("Title")
   end
 end
