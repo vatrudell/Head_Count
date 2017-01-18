@@ -1,5 +1,4 @@
 require 'csv'
-require 'pry'
 
 module Sanitation
   attr_reader    :name,
@@ -7,6 +6,16 @@ module Sanitation
                  :race,
                  :year,
                  :data
+
+  def clean_up_district_data(input)
+   input[:enrollment].values.each do |file|
+     opened_file = CSV.open(file, headers: true, header_converters: :symbol)
+     opened_file.map do |line|
+       @name = line[:location].upcase
+       populate_district_data
+     end
+   end
+  end
 
   def choose_destiny(file)
    populate_kindergarten_data if file.include?("Kindergartners")
@@ -27,14 +36,22 @@ module Sanitation
     end
   end
 
-  def clean_up_district_data(input)
-    input[:enrollment].values.each do |file|
-      opened_file = CSV.open(file, headers: true, header_converters: :symbol)
-      opened_file.map do |line|
-        @name = line[:location].upcase
-        populate_district_data
-      end
-    end
+  def statewide_csv_brain(line, name, file)
+    @district_name = line[:location].upcase
+    @year = line[:timeframe].to_i
+    statewide_concentration_cleaner(line[:score]) unless line[:score].nil?
+    statewide_data_cleaner(line[:data])
+    statewide_race_renaming(line[:race_ethnicity]) unless line[
+      :race_ethnicity].nil?
+    choose_statewide_destiny(name, file)
+  end
+
+  def choose_statewide_destiny(name, opened_file)
+    populate_third_grade(name) if name == :third_grade
+    populate_eighth_grade(name) if name == :eighth_grade
+    populate_average_proficiency(name) if name == :math
+    populate_average_proficiency(name) if name == :reading
+    populate_average_proficiency(name) if name == :writing
   end
 
   def clean_up_statewide_data(input)
@@ -54,7 +71,7 @@ module Sanitation
     statewide_race_renaming(line[:race_ethnicity])
       choose_statewide_destiny(name, file)
   end
-
+  
   def statewide_data_cleaner(line_data)
     if line_data == "N/A"
       @district_data = 0
@@ -81,13 +98,12 @@ module Sanitation
     @concentration = :writing if line_concentration == "Writing"
     @concentration = :reading if line_concentration == "Reading"
   end
-  
-  def choose_statewide_destiny(name, opened_file)
-    populate_third_grade(name) if name == :third_grade
-    populate_eighth_grade(name) if name == :eighth_grade
-    populate_average_proficiency(name) if name == :math
-    populate_average_proficiency(name) if name == :reading
-    populate_average_proficiency(name) if name == :writing
+
+  def choose_economic_destiny(file)
+    populate_median_household_income(file) if file.include?("Median")
+    populate_children_in_poverty(file) if file.include?("School")
+    populate_free_or_reduced_price_lunch(file) if file.include?("free")
+    populate_title_i(file) if file.include?("Title")
   end
 
   def clean_up_economic_data(input)

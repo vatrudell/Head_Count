@@ -10,14 +10,18 @@ class HeadcountAnalyst
 
   def kindergarten_participation_rate_variation(name, against)
     compare = against.values[0]
-    one = database.enrollment_repository.enrollments[name].kindergarten_participation.values
-    two = database.enrollment_repository.enrollments[compare].kindergarten_participation.values
+    one = database.enrollment_repository.enrollments[name].
+    kindergarten_participation.values
+    two = database.enrollment_repository.enrollments[compare].
+    kindergarten_participation.values
     math(one, two)
   end
 
   def kindergarten_participation_rate_variation_trend(name, compare)
-    name_data = database.enrollment_repository.enrollments[name].kindergarten_participation
-    against_data = database.enrollment_repository.enrollments[compare[:against]].kindergarten_participation
+    name_data = database.enrollment_repository.enrollments[name].
+    kindergarten_participation
+    against_data = database.enrollment_repository.enrollments[compare[
+      :against]].kindergarten_participation
     set_year_to_data_in_new_hash(name_data, against_data)
   end
 
@@ -31,20 +35,27 @@ class HeadcountAnalyst
   end
 
   def kindergarten_participation_against_high_school_graduation(district)
-    kindergarten = database.enrollment_repository.enrollments[district].kindergarten_participation.values
-    colorado_one = database.enrollment_repository.enrollments["COLORADO"].kindergarten_participation.values
-    graduation = database.enrollment_repository.enrollments[district].high_school_graduation.values
-    colorado_two = database.enrollment_repository.enrollments["COLORADO"].high_school_graduation.values
-    ((math(kindergarten, colorado_one))/(math(graduation, colorado_two))).round(3)
+    kindergarten = database.enrollment_repository.enrollments[district].
+    kindergarten_participation.values
+    colorado_one = database.enrollment_repository.enrollments["COLORADO"].
+    kindergarten_participation.values
+    graduation = database.enrollment_repository.enrollments[district].
+    high_school_graduation.values
+    colorado_two = database.enrollment_repository.enrollments["COLORADO"].
+    high_school_graduation.values
+    kindergarten_variation = math(kindergarten, colorado_one)
+    graduation_variation = math(graduation, colorado_two)
+    (kindergarten_variation/graduation_variation).round(3)
   end
-
-  def kindergarten_participation_correlates_with_high_school_graduation(comparing_district)
-    if comparing_district[:for] == "STATEWIDE"
-      statewide_correlation_setup(comparing_district)
-     elsif comparing_district.values != "STATEWIDE" && comparing_district.values.count == 1
-      single_district_correlation(comparing_district[:for])
-    elsif comparing_district[:across].class == Array
-      multiple_district_correlation(comparing_district)
+  
+  def kindergarten_participation_correlates_with_high_school_graduation(compare)
+    if compare[:for] == "STATEWIDE"
+      statewide_correlation_setup(compare)
+    elsif compare.values != "STATEWIDE" && compare.
+       values.count == 1
+      single_district_correlation(compare[:for])
+    elsif compare[:across].class == Array
+      multiple_district_correlation(compare)
     end
   end
 
@@ -70,7 +81,8 @@ class HeadcountAnalyst
 
   def single_district_correlation(district)
     single_ratio = []
-    single_ratio << kindergarten_participation_against_high_school_graduation(district)
+    result = kindergarten_participation_against_high_school_graduation(district)
+    single_ratio << result
     check_if_within_ratio(single_ratio)
   end
 
@@ -135,9 +147,13 @@ class HeadcountAnalyst
   end
 
   def find_all_years_grade_eight(subject, district)
-    years = @database.statewide_test_repository.statewide_information[district].grade_eight_proficient.keys
+    years = @database.statewide_test_repository.statewide_information[district].
+      grade_eight_proficient.keys
     correct_years = years.find_all do |year|
-      @database.statewide_test_repository.statewide_information[district].grade_eight_proficient[year].keys.include?(subject) && (@database.statewide_test_repository.statewide_information[district].grade_eight_proficient[year][subject] < 1 && @database.statewide_test_repository.statewide_information[district].grade_eight_proficient[year][subject] > 0)
+      @database.statewide_test_repository.statewide_information[district].
+        grade_eight_proficient[year].keys.include?(subject) && (@database.statewide_test_repository.
+        statewide_information[district].grade_eight_proficient[year][subject] < 1 && @database.
+        statewide_test_repository.statewide_information[district].grade_eight_proficient[year][subject] > 0)
     end
     @first_year = correct_years.first
     @last_year = correct_years.last
@@ -145,8 +161,10 @@ class HeadcountAnalyst
 
   def find_data_grade_eight(subject, district)
     unless @first_year.nil? || (@last_year == @first_year)
-      @data_one = @database.statewide_test_repository.statewide_information[district].grade_eight_proficient[@first_year][subject]
-      @data_two = @database.statewide_test_repository.statewide_information[district].grade_eight_proficient[@last_year][subject]
+      @data_one = @database.statewide_test_repository.statewide_information[district].
+      grade_eight_proficient[@first_year][subject]
+      @data_two = @database.statewide_test_repository.statewide_information[district].
+      grade_eight_proficient[@last_year][subject]
     end
   end
 
@@ -164,9 +182,12 @@ class HeadcountAnalyst
   def find_all_years_grade_three(subject, district)
     years = @database.statewide_test_repository.statewide_information[district].grade_three_proficient.keys
     correct_years = years.find_all do |year|
-      @database.statewide_test_repository.statewide_information[district].grade_three_proficient[year].keys.include?(subject) &&
-      (@database.statewide_test_repository.statewide_information[district].grade_three_proficient[year][subject] < 1 &&
-      @database.statewide_test_repository.statewide_information[district].grade_three_proficient[year][subject] > 0)
+      @database.statewide_test_repository.statewide_information[district].
+      grade_three_proficient[year].keys.include?(subject) &&
+      (@database.statewide_test_repository.statewide_information[district].
+      grade_three_proficient[year][subject] < 1 &&
+      @database.statewide_test_repository.statewide_information[district].
+      grade_three_proficient[year][subject] > 0)
     end
     @first_year = correct_years.first
     @last_year = correct_years.last
@@ -174,13 +195,14 @@ class HeadcountAnalyst
 
   def find_data_grade_three(subject, district)
     unless @first_year.nil? || (@last_year == @first_year)
-      @data_one = @database.statewide_test_repository.statewide_information[district].grade_three_proficient[@first_year][subject]
-      @data_two = @database.statewide_test_repository.statewide_information[district].grade_three_proficient[@last_year][subject]
+      @data_one = @database.statewide_test_repository.statewide_information[district].
+      grade_three_proficient[@first_year][subject]
+      @data_two = @database.statewide_test_repository.statewide_information[district].
+      grade_three_proficient[@last_year][subject]
     end
   end
 
   def all_district_averages_grade_eight(parameters)
-    
     top_growth_grade_eight(grade: 8, subject: :math)
     math = @growths
     top_growth_grade_eight(grade: 8, subject: :reading)
@@ -212,7 +234,8 @@ class HeadcountAnalyst
     all_district_averages_all = Hash.new
     districts = writing.keys
     districts.each do |district|
-      all_district_averages_all[district] = ((writing[district] + reading[district] + math[district])/3).round(3)
+      all_district_averages_all[district] = 
+      ((writing[district] + reading[district] + math[district])/3).round(3)
     end
     district_sorting(all_district_averages_all)
   end
@@ -224,7 +247,9 @@ class HeadcountAnalyst
     all_district_averages_all = Hash.new
     districts = writing.keys
     districts.each do |district|
-      all_district_averages_all[district] = ((writing[district] * writing_weight) + (reading[district] * reading_weight) + (math[district] * math_weight)).round(3)
+      all_district_averages_all[district] = 
+      ((writing[district] * writing_weight) + (reading[district] * reading_weight) + 
+      (math[district] * math_weight)).round(3)
     end
     district_sorting(all_district_averages_all)
   end
@@ -263,4 +288,3 @@ dr = DistrictRepository.new
      ha.top_statewide_test_year_over_year_growth(grade: 3)
     #ha.kindergarten_participation_correlates_with_high_school_graduation(for: 'MONTROSE COUNTY RE-1J')
     #ha.kindergarten_participation_correlates_with_high_school_graduation(:across => ["ACADEMY 20", 'PARK (ESTES PARK) R-3', 'YUMA SCHOOL DISTRICT 1'])
-

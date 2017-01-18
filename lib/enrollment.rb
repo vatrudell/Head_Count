@@ -18,6 +18,7 @@ class Enrollment
   def kindergarten_participation_in_year(year)
     kindergarten_participation[year] if year
   end
+  #error if year doen't exists
 
   def graduation_rate_by_year
     high_school_graduation
@@ -26,4 +27,6 @@ class Enrollment
   def graduation_rate_in_year(year)
     high_school_graduation[year] if year
   end
+  #error if year doen't exists
+
 end
