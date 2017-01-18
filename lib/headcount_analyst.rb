@@ -260,32 +260,3 @@ class HeadcountAnalyst
       final.reverse[0]
   end
 end
-
-
-
-dr = DistrictRepository.new
-    dr.load_data({:enrollment => {
-                    :kindergarten => "./data/Kindergartners in full-day program.csv",
-                    :high_school_graduation => "./data/High school graduation rates.csv",
-                   },
-                   :statewide_testing => {
-                     :third_grade => "./data/3rd grade students scoring proficient or above on the CSAP_TCAP.csv",
-                     :eighth_grade => "./data/8th grade students scoring proficient or above on the CSAP_TCAP.csv",
-                     :math => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Math.csv",
-                     :reading => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Reading.csv",
-                     :writing => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Writing.csv"
-                   }
-                 })
-    ha = HeadcountAnalyst.new(dr)
-    ha.kindergarten_participation_against_high_school_graduation("COLORADO")
-    ha.kindergarten_participation_correlates_with_high_school_graduation(:for =>'STATEWIDE')
-    ha.kindergarten_participation_correlates_with_high_school_graduation(for: 'ACADEMY 20')
-    # ha.test_methods
-    # top_statewide_test_year_over_year_growth(2000)
-    # ha.top_statewide_test_year_over_year_growth(grade: 3, subject: :math, top: 3)
-    # ha.all_district_averages_grade_three
-    # ha.top_statewide_test_year_over_year_growth(grade: 8, :weighting => {:math => 0.5, :reading => 0.5, :writing => 0.0})
-    # ha.test_methods
-     ha.top_statewide_test_year_over_year_growth(grade: 3)
-    #ha.kindergarten_participation_correlates_with_high_school_graduation(for: 'MONTROSE COUNTY RE-1J')
-    #ha.kindergarten_participation_correlates_with_high_school_graduation(:across => ["ACADEMY 20", 'PARK (ESTES PARK) R-3', 'YUMA SCHOOL DISTRICT 1'])
