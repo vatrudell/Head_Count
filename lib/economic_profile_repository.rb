@@ -13,7 +13,6 @@ class EconomicProfileRepository
     clean_up_economic_data(input)
   end
   
-#name - @name, and do year and data, data_type
   def populate_median_household_income(opened_file)
     if economic_profiles.keys.include?(@name)
       median_household_addition = {}
