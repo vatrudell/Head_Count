@@ -14,7 +14,7 @@ class StateWideTestRepository
   def load_data(input)
     clean_up_statewide_data(input)
   end
-#change district_name to name, district_data
+
   def populate_third_grade(name)
     if statewide_information.keys.include? @district_name.upcase
       populate_third_grade_with_existing_district(name)
